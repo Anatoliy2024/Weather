@@ -88,7 +88,6 @@ export function OpenMeteo({ statusShow }: { statusShow: string }) {
                         <WeatherIcon weather_code={state.weather_code[index]} />
 
                         <span>
-                          +
                           {Math.round(
                             (state.temperature_2m[index] +
                               state.temperature_2m[index + 1] +
