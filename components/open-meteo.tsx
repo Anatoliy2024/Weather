@@ -9,12 +9,12 @@ import { DAYS, MONTHS } from "../constants/montsAndDayWeek"
 import clsx from "clsx"
 import { WeatherIcon, Water } from "./iconSVG"
 
-export function OpenMeteo() {
+export function OpenMeteo({ statusShow }: { statusShow: string }) {
   const [city, setCity] = useState("")
   const [loading, setLoading] = useState(false)
   const [state, setState] = useState<Record<string, number[]> | null>(null)
   const [times, setTimes] = useState<Date[]>([])
-  const [statusShow, setStatusShow] = useState<string>("day")
+
   const handleFetchWeather = async () => {
     console.log(city)
     if (city) {
