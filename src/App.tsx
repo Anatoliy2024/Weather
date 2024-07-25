@@ -66,7 +66,7 @@ function App() {
 
   return (
     <div className="flex justify-center items-center min-h-screen flex-col ">
-      <div className="flex justify-center  pb-6">Погода</div>
+      <div className="flex justify-center  pb-6">Погода В городе</div>
       <div className=" flex gap-3 flex-col">
         <div className="flex gap-4">
           <input
