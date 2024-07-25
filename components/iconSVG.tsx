@@ -1,8 +1,8 @@
 export function Water() {
   return (
     <svg
-      width="20"
-      height="20"
+      width="20px"
+      height="20px"
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -20,11 +20,39 @@ export function Water() {
   )
 }
 
+export function Windy() {
+  return (
+    <svg
+      version="1.1"
+      id="Layer_1"
+      xmlns="http://www.w3.org/2000/svg"
+      x="0px"
+      y="0px"
+      width="20px"
+      height="20px"
+      viewBox="25 18 50 50"
+    >
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M65.999,52L65.999,52h-3c-1.105,0-2-0.895-2-1.999s0.895-2,2-2h3
+	c1.104,0,2-0.896,2-1.999c0-1.105-0.896-2-2-2c-1.105,0-2-0.896-2-2s0.895-2,2-2c0.137,0,0.271,0.014,0.402,0.041
+	c3.121,0.211,5.596,2.783,5.596,5.959C71.997,49.314,69.312,52,65.999,52z M55.999,48.001h-2h-6.998H34.002
+	c-1.104,0-1.999,0.896-1.999,2S32.898,52,34.002,52h2h3.999h3h4h3h3.998h2c3.314,0,6,2.687,6,6c0,3.176-2.475,5.748-5.596,5.959
+	C56.272,63.986,56.138,64,55.999,64c-1.104,0-2-0.896-2-2c0-1.105,0.896-2,2-2c1.105,0,2-0.896,2-2s-0.895-2-2-2h-2h-3.998h-3h-4h-3
+	h-3.999h-2c-3.313,0-5.999-2.686-5.999-5.999c0-3.175,2.475-5.747,5.596-5.959c0.131-0.026,0.266-0.04,0.403-0.04l0,0h12.999h6.998
+	h2c1.105,0,2-0.896,2-2s-0.895-2-2-2c-1.104,0-2-0.895-2-2c0-1.104,0.896-2,2-2c0.139,0,0.273,0.015,0.404,0.041
+	c3.121,0.211,5.596,2.783,5.596,5.959C61.999,45.314,59.313,48.001,55.999,48.001z"
+      />
+    </svg>
+  )
+}
+
 const WIDTH = "25px"
 const HEIGHT = "25px"
 const VIEW_BOX = "25 25 50 60"
 
-export function Icon0123() {
+function Icon0123() {
   return (
     <svg
       version="1.1"
@@ -60,7 +88,7 @@ export function Icon0123() {
   )
 }
 
-export function Icon9x569() {
+function Icon9x569() {
   return (
     <svg
       version="1.1"
@@ -86,7 +114,7 @@ export function Icon9x569() {
   )
 }
 
-export function Icon8x56() {
+function Icon8x56() {
   return (
     <svg
       version="1.1"
@@ -117,7 +145,7 @@ export function Icon8x56() {
   )
 }
 
-export function Icon8x012() {
+function Icon8x012() {
   return (
     <svg
       version="1.1"
@@ -145,7 +173,7 @@ export function Icon8x012() {
   )
 }
 
-export function Icon77() {
+function Icon77() {
   return (
     <svg
       version="1.1"
@@ -173,7 +201,8 @@ export function Icon77() {
     </svg>
   )
 }
-export function Icon7x135() {
+
+function Icon7x135() {
   return (
     <svg
       version="1.1"
@@ -204,7 +233,7 @@ export function Icon7x135() {
   )
 }
 
-export function Icon6x67() {
+function Icon6x67() {
   return (
     <svg
       version="1.1"
@@ -235,7 +264,8 @@ export function Icon6x67() {
     </svg>
   )
 }
-export function Icon6x135() {
+
+function Icon6x135() {
   return (
     <svg
       version="1.1"
@@ -263,7 +293,7 @@ export function Icon6x135() {
   )
 }
 
-export function Icon5x67() {
+function Icon5x67() {
   return (
     <svg
       version="1.1"
@@ -303,7 +333,7 @@ export function Icon5x67() {
   )
 }
 
-export function Icon5x135() {
+function Icon5x135() {
   return (
     <svg
       version="1.1"
@@ -334,7 +364,7 @@ export function Icon5x135() {
     </svg>
   )
 }
-export function Icon4x58() {
+function Icon4x58() {
   return (
     <svg
       version="1.1"

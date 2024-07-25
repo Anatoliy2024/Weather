@@ -37,6 +37,18 @@ const getWeatherData = async (latitude: number, longitude: number) => {
           "showers",
           "snowfall",
           "weather_code",
+          "wind_speed_10m",
+        ],
+
+        daily: [
+          "weather_code",
+          "temperature_2m_max",
+          "temperature_2m_min",
+          "precipitation_sum",
+          "rain_sum",
+          "showers_sum",
+          "wind_speed_10m_max",
+          "wind_gusts_10m_max",
         ],
         timezone: "Europe/Berlin", // Укажите нужный часовой пояс
       },
@@ -61,8 +73,9 @@ export const fetchWeatherByCity = async (city: string) => {
     if (coordinates !== undefined) {
       const { latitude, longitude } = coordinates
       const weatherData = await getWeatherData(latitude, longitude)
-      const weather = weatherData.hourly
-      console.log(weather)
+      const weatherHourly = weatherData.hourly
+      const weatherDaily = weatherData.daily
+      console.log({ weatherHourly, weatherDaily })
       // Формирование времени
       // const times = weather.time.map((timestamp: any) => new Date(timestamp))
       // const temperatures = weather.temperature_2m
@@ -71,7 +84,7 @@ export const fetchWeatherByCity = async (city: string) => {
       // times.forEach((time: any, index: number) => {
       //   console.log(`${time.toISOString()}: ${temperatures[index]}°C`)
       // })
-      return weather
+      return { weatherHourly, weatherDaily }
     }
   } catch (error) {
     console.error("Ошибка при получении данных по городу:", error)
