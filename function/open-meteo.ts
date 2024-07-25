@@ -49,6 +49,7 @@ const getWeatherData = async (latitude: number, longitude: number) => {
           "showers_sum",
           "wind_speed_10m_max",
           "wind_gusts_10m_max",
+          "precipitation_probability_max",
         ],
         timezone: "Europe/Berlin", // Укажите нужный часовой пояс
       },

@@ -23,6 +23,12 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src/**/*", "components/**/*", "function/**/*", "constants/**/*"],
+  "include": [
+    "src/**/*",
+    "components/**/*",
+    "function/**/*",
+    "constants/**/*",
+    "./ui/**/*"
+  ],
   "exclude": ["node_modules", "dist"]
 }
