@@ -544,14 +544,14 @@ export function OpenMeteo({
                         "-"
                           ? ""
                           : "+"}
-                        {stateDaily.temperature_2m_max[index]}°
+                        {Math.round(stateDaily.temperature_2m_max[index])}°
                       </span>
                       <span className="rounded bg-blue-200">
                         {stateDaily.temperature_2m_min[index].toString()[0] ===
                         "-"
                           ? ""
                           : "+"}
-                        {stateDaily.temperature_2m_min[index]}°
+                        {Math.round(stateDaily.temperature_2m_min[index])}°
                       </span>
                       <span className="flex gap-1">
                         <Windy />
