@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { OpenMeteo } from "../components/open-meteo"
 import { fetchWeatherByCity } from "../function/open-meteo"
 import clsx from "clsx"
@@ -13,8 +13,16 @@ function App() {
     null
   )
   const [times, setTimes] = useState<Date[]>([])
+  useEffect(() => {
+    const cityLocal = localStorage.getItem("city")
+    if (cityLocal) {
+      setCity(cityLocal)
+      console.log("Пошло", cityLocal)
+      handleFetchWeather(cityLocal)
+    }
+  }, [])
 
-  const handleFetchWeather = async () => {
+  const handleFetchWeather = async (city: string) => {
     try {
       console.log(city)
       if (city) {
@@ -23,6 +31,7 @@ function App() {
         const weatherData = await fetchWeatherByCity(city)
 
         if (weatherData) {
+          localStorage.setItem("city", city)
           const { weatherHourly, weatherDaily } = weatherData
 
           if (weatherHourly && weatherDaily) {
@@ -77,7 +86,7 @@ function App() {
           />
           <button
             className="p-1 rounded bg-lime-400"
-            onClick={handleFetchWeather}
+            onClick={() => handleFetchWeather(city)}
             disabled={loading}
           >
             {loading ? "Загрузка..." : "Кликни"}
