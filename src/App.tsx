@@ -139,7 +139,10 @@ function App() {
         </div>
         <div>
           <h2 className="text-center">WeatherAPI</h2>
-          <WeatherAPI stateWeatherApi={stateWeatherApi} />
+          <WeatherAPI
+            stateWeatherApi={stateWeatherApi}
+            statusShow={statusShow}
+          />
         </div>
         <div></div>
       </div>

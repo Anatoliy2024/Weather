@@ -1,30 +1,31 @@
 import { DAYS, MONTHS } from "../constants/montsAndDayWeek"
 
 import clsx from "clsx"
-import { WeatherIcon, Water, Windy, RainProbability } from "./iconSVG"
+import { Water, Windy, RainProbability } from "./iconSVG"
 
 export function WeatherAPI({
   stateWeatherApi,
+  statusShow,
 }: {
-  stateWeatherApi: Record<string, unknown> | null
+  stateWeatherApi: Record<string, any> | null
+  statusShow: string
 }) {
-  if (stateWeatherApi === null) return null
-  const { current, forecast } = stateWeatherApi
+  if (stateWeatherApi === null) return
+  const { forecast } = stateWeatherApi
+
   const arrayDays = forecast.forecastday
-  const today = new Date()
+  const today = 0
 
-  const tomorrow = new Date(today)
-  tomorrow.setDate(today.getDate() + 1)
+  const tomorrow = 1
 
-  const nextTomorrow = new Date(today)
-  nextTomorrow.setDate(today.getDate() + 2)
+  const nextTomorrow = 2
 
-  const timesDaily = stateDaily?.time.map(
-    (timestamp: number) => new Date(timestamp)
-  )
+  // const timesDaily = stateDaily?.time.map(
+  //   (timestamp: number) => new Date(timestamp)
+  // )
 
   function getNewState(
-    state: Record<string, number[]> | null,
+    state: Record<string, any> | null,
     value: string,
     index: number,
     number: number
@@ -33,7 +34,7 @@ export function WeatherAPI({
     let count = 0
 
     for (let i = 0; i < number; i++) {
-      count += state[value][index + i]
+      count += state[index + i][value]
     }
     // console.log(count)
     return count
@@ -54,7 +55,7 @@ export function WeatherAPI({
   }
 
   function getArrayNumber(
-    state: Record<string, number[]> | null,
+    state: Record<string, any>[] | null,
     value: string,
     index: number,
     number: number
@@ -62,34 +63,38 @@ export function WeatherAPI({
     if (state === null) return []
     const array: number[] = []
     for (let i = 0; i < number; i++) {
-      array.push(state[value][index + i])
+      array.push(state[index + i][value])
     }
     // console.log(value, array)
     return array
   }
 
+  function changeDate(num: string | number): Date {
+    const day = new Date(num)
+    return day
+  }
+  interface RandomObject {
+    [key: string]: any
+  }
   const weatherFromDay = (
-    date: Date,
-    times: Date[],
-    state: Record<string, number[]>
+    day: number,
+    // times: Date[],
+    arrayDays: RandomObject[]
   ) => (
     <div className="w-full select-none">
       <div>
-        {date.getDate()}:{DAYS[date.getDay()]}:{MONTHS[date.getMonth() + 1]}
+        {changeDate(arrayDays[day].date).getDate()}:
+        {DAYS[changeDate(arrayDays[day].date).getDay()]}:
+        {MONTHS[changeDate(arrayDays[day].date).getMonth() + 1]}
       </div>
       <ul className="flex ">
-        {times
-          .filter((time) => time.getDate() === date.getDate())
-          .map((time: Date, index: number) => {
+        {arrayDays[day].hour.map(
+          (hourInfo: Record<string, any>, index: number) => {
             const today = new Date()
-
-            const differenceInMilliseconds = date.getTime() - today.getTime()
-            const differenceInHours = Math.round(
-              differenceInMilliseconds / (1000 * 60 * 60)
-            )
-
-            index += differenceInHours
+            const time = changeDate(hourInfo.time)
             if (index % 3 === 0) {
+              const hours = arrayDays[day].hour
+
               return (
                 <li
                   key={index}
@@ -98,7 +103,8 @@ export function WeatherAPI({
                     (today.getHours() === time.getHours() ||
                       today.getHours() === time.getHours() + 1 ||
                       today.getHours() === time.getHours() + 2) &&
-                      time.getDate() === today.getDate()
+                      changeDate(arrayDays[day].date).getDate() ===
+                        today.getDate()
                       ? "border border-lime-400 bg-lime-100"
                       : ""
                   )}
@@ -113,131 +119,223 @@ export function WeatherAPI({
                   </span>
                   {/* {code[index] ===} */}
 
-                  <WeatherIcon
+                  {/* <WeatherIcon
                     weather_code={Math.max(
-                      ...getArrayNumber(state, "weather_code", index, 3)
+                      ...getArrayNumber(
+                        arrayDays[day].hour,
+                        "image_code",
+                        index,
+                        3
+                      )
                     )}
-                  />
+                  /> */}
+                  <div>
+                    <img
+                      src={hourInfo.condition.icon}
+                      alt="weatherImg"
+                      width={40}
+                    />
+                  </div>
 
                   <span>
-                    {state.temperature_2m[index].toString()[0] === "-"
-                      ? ""
-                      : "+"}
-                    {Math.round(
-                      getNewState(state, "temperature_2m", index, 3) / 3
-                    )}
+                    {hourInfo.temp_c.toString()[0] === "-" ? "" : "+"}
+                    {Math.round(getNewState(hours, "temp_c", index, 3) / 3)}
+                    {/* {Math.round(
+                      (arrayDays[day].hour[index].temp_c +
+                        arrayDays[day].hour[index + 1].temp_c +
+                        arrayDays[day].hour[index + 2].temp_c) /
+                        3
+                    )} */}
                     °
                   </span>
                   <span className="flex gap-1">
                     <Windy />
                     {Math.round(
-                      Math.max(
-                        ...getArrayNumber(state, "wind_speed_10m", index, 3)
-                      )
+                      Math.max(...getArrayNumber(hours, "wind_kph", index, 3))
                     )}
+                    {/* {Math.round(
+                      Math.max(
+                        (arrayDays[day].hour[index].wind_kph,
+                        arrayDays[day].hour[index + 1].wind_kph,
+                        arrayDays[day].hour[index + 2].wind_kph)
+                      )
+                    )} */}
                   </span>
                   <span className="flex gap-1">
                     <RainProbability />
                     {Math.max(
-                      ...getArrayNumber(
-                        state,
-                        "precipitation_probability",
-                        index,
-                        3
-                      )
+                      ...getArrayNumber(hours, "chance_of_rain", index, 3)
                     )}
+                    {/* {Math.max(
+                      (hourInfo.chance_of_rain,
+                      arrayDays[day].hour[index + 1].chance_of_rain,
+                      arrayDays[day].hour[index + 2].chance_of_rain)
+                    )} */}
                   </span>
                   <span className="flex items-center gap-1">
                     <Water />
-                    {getNewState(state, "precipitation", index, 3) === 0
+                    {getNewState(hours, "precip_mm", index, 3) === 0
                       ? 0
-                      : getNewState(state, "precipitation", index, 3).toFixed(
-                          1
-                        )}
+                      : getNewState(hours, "precip_mm", index, 3).toFixed(1)}
+                    {/* {hourInfo.precip_mm +
+                      arrayDays[day].hour[index + 1].precip_mm +
+                      arrayDays[day].hour[index + 2].precip_mm ===
+                    0
+                      ? 0
+                      : (
+                          hourInfo.precip_mm +
+                          arrayDays[day].hour[index + 1].precip_mm +
+                          arrayDays[day].hour[index + 2].precip_mm
+                        ).toFixed(1)} */}
                   </span>
                 </li>
               )
             } else {
               return null
             }
-          })}
+          }
+        )}
       </ul>
     </div>
   )
 
   const renderWeather = (
-    date: Date,
-    times: Date[],
-    state: Record<string, number[]>
+    // date: Date,
+    // times: Date[],
+    // state: Record<string, number[]>
+    day: number,
+    // times: Date[],
+    arrayDays: RandomObject[]
   ) => (
-    <div className="select-none" key={date.getDate()}>
+    <div className="select-none" key={day}>
       <div>
-        {date.getDate()}:{DAYS[date.getDay()]}:{MONTHS[date.getMonth()]}
+        {changeDate(arrayDays[day].date).getDate()}:
+        {DAYS[changeDate(arrayDays[day].date).getDay()]}:
+        {MONTHS[changeDate(arrayDays[day].date).getMonth() + 1]}
       </div>
       <ul className="flex">
-        {times
-          .filter((time) => time.getDate() === date.getDate())
-          .map((_, index) => {
-            const today = new Date()
+        {arrayDays[day].hour.map((_: null, index: number) => {
+          // const today = new Date()
 
-            const differenceInMilliseconds = date.getTime() - today.getTime()
-            const differenceInHours = Math.round(
-              differenceInMilliseconds / (1000 * 60 * 60)
-            )
+          // const differenceInMilliseconds = date.getTime() - today.getTime()
+          // const differenceInHours = Math.round(
+          //   differenceInMilliseconds / (1000 * 60 * 60)
+          // )
 
-            index += differenceInHours
+          // index += differenceInHours
+          const hours = arrayDays[day].hour
 
-            if (index % 6 === 0) {
-              return (
-                <li key={index} className="flex flex-col">
-                  <div>{getDayTime(index)}</div>
-                  <WeatherIcon
-                    weather_code={Math.max(
-                      ...getArrayNumber(state, "weather_code", index, 6)
-                    )}
+          // getArrayNumber(hours, "wind_kph", index, 6)
+          if (index % 6 === 0) {
+            // console.log(
+            //   Math.max(
+            //     hours[index].wind_kph,
+            //     hours[index + 1].wind_kph,
+            //     hours[index + 2].wind_kph,
+            //     hours[index + 3].wind_kph,
+            //     hours[index + 4].wind_kph,
+            //     hours[index + 5].wind_kph
+            //   )
+            // )
+            return (
+              <li key={index} className="flex flex-col">
+                <div>{getDayTime(index)}</div>
+                {/* <WeatherIcon
+                  weather_code={Math.max(
+                    ...getArrayNumber(state, "weather_code", index, 6)
+                  )}
+                /> */}
+                <div>
+                  <img
+                    src={arrayDays[day].hour[index].condition.icon}
+                    alt="weatherImg"
+                    width={40}
                   />
-                  <span>
-                    {state.temperature_2m[index].toString()[0] === "-"
-                      ? ""
-                      : "+"}
-                    {Math.round(
-                      getNewState(state, "temperature_2m", index, 6) / 6
-                    )}
-                    °
-                  </span>
-                  <span className="flex gap-1">
-                    <Windy />
-                    {Math.round(
-                      Math.max(
-                        ...getArrayNumber(state, "wind_speed_10m", index, 6)
-                      )
-                    )}
-                  </span>
-                  <span className="flex gap-1">
-                    <RainProbability />
-                    {Math.max(
-                      ...getArrayNumber(
-                        state,
-                        "precipitation_probability",
-                        index,
-                        6
-                      )
-                    )}
-                    {/* {state.precipitation_probability[index]} */}
-                  </span>
+                </div>
+                {/* <span>
+                  {state.temperature_2m[index].toString()[0] === "-" ? "" : "+"}
+                  {Math.round(
+                    getNewState(state, "temperature_2m", index, 6) / 6
+                  )}
+                  °
+                </span> */}
 
-                  <span className="flex items-center gap-1">
-                    <Water />
-                    {getNewState(state, "precipitation", index, 6) === 0
-                      ? 0
-                      : getNewState(state, "precipitation", index, 6).toFixed(
-                          1
-                        )}
-                  </span>
-                </li>
-              )
-            }
-          })}
+                <span>
+                  {hours[index].temp_c.toString()[0] === "-" ? "" : "+"}
+                  {Math.round(getNewState(hours, "temp_c", index, 6) / 6)}
+                  {/* {Math.round(
+                    (arrayDays[day].hour[index].temp_c +
+                      arrayDays[day].hour[index + 1].temp_c +
+                      arrayDays[day].hour[index + 2].temp_c +
+                      arrayDays[day].hour[index + 3].temp_c +
+                      arrayDays[day].hour[index + 4].temp_c +
+                      arrayDays[day].hour[index + 5].temp_c) /
+                      6
+                  )} */}
+                  °
+                </span>
+
+                <span className="flex gap-1">
+                  <Windy />
+                  {Math.round(
+                    Math.max(...getArrayNumber(hours, "wind_kph", index, 6))
+                  )}
+                  {/* {getArrayNumber(hours,'wind_kph',index,6)}
+                  {Math.round(
+                    Math.max(
+                      ...[
+                        hours[index].wind_kph,
+                        hours[index + 1].wind_kph,
+                        hours[index + 2].wind_kph,
+                        hours[index + 3].wind_kph,
+                        hours[index + 4].wind_kph,
+                        hours[index + 5].wind_kph,
+                      ]
+                    )
+                  )} */}
+                </span>
+                <span className="flex gap-1">
+                  <RainProbability />
+                  {Math.max(
+                    ...getArrayNumber(hours, "chance_of_rain", index, 6)
+                  )}
+                  {/* {Math.max(
+                    (arrayDays[day].hour[index].chance_of_rain,
+                    arrayDays[day].hour[index + 1].chance_of_rain,
+                    arrayDays[day].hour[index + 2].chance_of_rain,
+                    arrayDays[day].hour[index + 3].chance_of_rain,
+                    arrayDays[day].hour[index + 4].chance_of_rain,
+                    arrayDays[day].hour[index + 5].chance_of_rain)
+                  )} */}
+                </span>
+
+                <span className="flex items-center gap-1">
+                  <Water />
+                  {getNewState(hours, "precip_mm", index, 6) === 0
+                    ? 0
+                    : getNewState(hours, "precip_mm", index, 6).toFixed(1)}
+
+                  {/* {arrayDays[day].hour[index].precip_mm +
+                    arrayDays[day].hour[index + 1].precip_mm +
+                    arrayDays[day].hour[index + 2].precip_mm +
+                    arrayDays[day].hour[index + 3].precip_mm +
+                    arrayDays[day].hour[index + 4].precip_mm +
+                    arrayDays[day].hour[index + 5].precip_mm ===
+                  0
+                    ? 0
+                    : (
+                        arrayDays[day].hour[index].precip_mm +
+                        arrayDays[day].hour[index + 1].precip_mm +
+                        arrayDays[day].hour[index + 2].precip_mm +
+                        arrayDays[day].hour[index + 3].precip_mm +
+                        arrayDays[day].hour[index + 4].precip_mm +
+                        arrayDays[day].hour[index + 5].precip_mm
+                      ).toFixed(1)} */}
+                </span>
+              </li>
+            )
+          }
+        })}
       </ul>
     </div>
   )
@@ -246,26 +344,27 @@ export function WeatherAPI({
   return (
     <div className="flex items-center justify-center ">
       <div className="border border-lime-400  flex flex-col gap-4 max-w-[600px] rounded-md">
-        {state !== null &&
+        {arrayDays !== null &&
           statusShow === "day" &&
-          weatherFromDay(today, times, state)}
-        {state !== null &&
+          weatherFromDay(today, arrayDays)}
+        {arrayDays !== null &&
           statusShow === "tomorrow" &&
-          weatherFromDay(tomorrow, times, state)}
-        {state !== null && statusShow === "3day" && (
+          weatherFromDay(tomorrow, arrayDays)}
+        {arrayDays !== null && statusShow === "3day" && (
           <div className="flex w-min-full">
             <div className="flex gap-3">
-              {renderWeather(today, times, state)}
-              {renderWeather(tomorrow, times, state)}
-              {renderWeather(nextTomorrow, times, state)}
+              {renderWeather(today, arrayDays)}
+              {renderWeather(tomorrow, arrayDays)}
+              {renderWeather(nextTomorrow, arrayDays)}
             </div>
           </div>
         )}
-        {state !== null && statusShow === "week" && (
+        {arrayDays !== null && statusShow === "week" && (
           <div className="w-full select-none">
             <ul className="flex ">
-              {timesDaily?.map((time: Date, index: number) => {
-                if (stateDaily !== null) {
+              {arrayDays.map((day: Record<string, any>, index: number) => {
+                if (arrayDays !== null) {
+                  const dayInfo = day.day
                   return (
                     <li
                       key={index}
@@ -274,40 +373,40 @@ export function WeatherAPI({
                       )}
                     >
                       <div className="flex flex-col">
-                        <span>{time.getDate()}</span>
-                        <span>{DAYS[time.getDay()]}</span>
+                        <span>{changeDate(day.date).getDate()}</span>
+                        <span>{DAYS[changeDate(day.date).getDay()]}</span>
                         {/* <span>{MONTHS[time.getMonth() + 1]}</span> */}
                       </div>
 
-                      <WeatherIcon
+                      {/* <WeatherIcon
                         weather_code={stateDaily.weather_code[index]}
-                      />
-
+                      /> */}
+                      <div>
+                        <img
+                          src={dayInfo.condition.icon}
+                          alt="weatherImg"
+                          width={40}
+                        />
+                      </div>
                       <span className="rounded bg-green-200">
-                        {stateDaily.temperature_2m_max[index].toString()[0] ===
-                        "-"
-                          ? ""
-                          : "+"}
-                        {Math.round(stateDaily.temperature_2m_max[index])}°
+                        {dayInfo.maxtemp_c.toString()[0] === "-" ? "" : "+"}
+                        {Math.round(dayInfo.maxtemp_c)}°
                       </span>
                       <span className="rounded bg-blue-200">
-                        {stateDaily.temperature_2m_min[index].toString()[0] ===
-                        "-"
-                          ? ""
-                          : "+"}
-                        {Math.round(stateDaily.temperature_2m_min[index])}°
+                        {dayInfo.mintemp_c.toString()[0] === "-" ? "" : "+"}
+                        {Math.round(dayInfo.mintemp_c)}°
                       </span>
                       <span className="flex gap-1">
                         <Windy />
-                        {Math.round(stateDaily.wind_speed_10m_max[index])}
+                        {Math.round(dayInfo.maxwind_kph)}
                       </span>
                       <span className="flex gap-1">
                         <RainProbability />
-                        {stateDaily.precipitation_probability_max[index]}
+                        {dayInfo.daily_chance_of_rain}
                       </span>
                       <span className="flex items-center gap-1">
                         <Water />
-                        {stateDaily.precipitation_sum[index]}
+                        {dayInfo.totalprecip_mm}
                       </span>
                     </li>
                   )
