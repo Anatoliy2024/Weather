@@ -8,7 +8,7 @@ export const getWeatherDate = async (city: string) => {
   console.log(apiKey)
   try {
     const response = await axios.get(
-      `http://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${city}&days=7`
+      `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${city}&days=7`
     )
     const dataWeather = response.data
     console.log(response.data)
