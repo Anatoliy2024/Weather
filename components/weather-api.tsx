@@ -406,7 +406,7 @@ export function WeatherAPI({
                       </span>
                       <span className="flex items-center gap-1">
                         <Water />
-                        {dayInfo.totalprecip_mm}
+                        {dayInfo.totalprecip_mm.toFixed(1)}
                       </span>
                     </li>
                   )

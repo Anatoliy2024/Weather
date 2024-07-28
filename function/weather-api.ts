@@ -5,7 +5,6 @@ import axios from "axios"
 const apiKey = import.meta.env.VITE_WEATHER_API_KEY
 
 export const getWeatherDate = async (city: string) => {
-  console.log(apiKey)
   try {
     const response = await axios.get(
       `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${city}&days=7`
