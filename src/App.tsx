@@ -79,71 +79,67 @@ function App() {
     statusShow === state ? "bg-lime-400 " : ""
 
   return (
-    <div className="flex justify-center items-center min-h-screen flex-col ">
-      <div className="flex justify-center  pb-6">Погода В городе</div>
-      <div className=" flex gap-3 flex-col">
-        <div className="flex gap-4">
-          <input
-            className="border border-lime-400 rounded-md"
-            type="text"
-            value={cityValue}
-            onChange={(e) => setCityValue(e.target.value)}
-          />
-          <button
-            className="p-1 rounded bg-lime-400"
-            onClick={() => {
-              handleFetchWeather(cityValue)
+    <div className="min-h-screen w-full flex items-center justify-center">
+      <div className="flex flex-col items-center gap-2 max-w-screen-md w-full px-4 ">
+        <div className="flex justify-center pb-6">Погода В городе</div>
+        <div className=" flex gap-3 flex-col">
+          <div className="flex gap-4">
+            <input
+              className="border border-lime-400 rounded-md"
+              type="text"
+              value={cityValue}
+              onChange={(e) => setCityValue(e.target.value)}
+            />
+            <button
+              className="p-1 rounded bg-lime-400"
+              onClick={() => {
+                handleFetchWeather(cityValue)
 
-              // const WeatherDate = getWeatherDate(cityValue)
-              // setStateWeatherApi(WeatherDate)
-            }}
-            disabled={loading}
-          >
-            {loading ? "Загрузка..." : "Кликни"}
-          </button>
+                // const WeatherDate = getWeatherDate(cityValue)
+                // setStateWeatherApi(WeatherDate)
+              }}
+              disabled={loading}
+            >
+              {loading ? "Загрузка..." : "Кликни"}
+            </button>
+          </div>
+          <div className="flex gap-4">
+            <UiButton
+              className={clsx(borderButton("day"))}
+              onClick={() => setStatusShow("day")}
+            >
+              Сегодня
+            </UiButton>
+            <UiButton
+              className={clsx(borderButton("tomorrow"))}
+              onClick={() => setStatusShow("tomorrow")}
+            >
+              Завтра
+            </UiButton>
+            <UiButton
+              className={clsx(borderButton("3day"))}
+              onClick={() => setStatusShow("3day")}
+            >
+              3 дня
+            </UiButton>
+            <UiButton
+              className={clsx(borderButton("week"))}
+              onClick={() => setStatusShow("week")}
+            >
+              7 дней
+            </UiButton>
+          </div>
         </div>
-        <div className="flex gap-4">
-          <UiButton
-            className={clsx(borderButton("day"))}
-            onClick={() => setStatusShow("day")}
-          >
-            Сегодня
-          </UiButton>
-          <UiButton
-            className={clsx(borderButton("tomorrow"))}
-            onClick={() => setStatusShow("tomorrow")}
-          >
-            Завтра
-          </UiButton>
-          <UiButton
-            className={clsx(borderButton("3day"))}
-            onClick={() => setStatusShow("3day")}
-          >
-            3 дня
-          </UiButton>
-          <UiButton
-            className={clsx(borderButton("week"))}
-            onClick={() => setStatusShow("week")}
-          >
-            7 дней
-          </UiButton>
-        </div>
-        <div>
-          <h2 className="text-center">open-meteo</h2>
-          <OpenMeteo
-            statusShow={statusShow}
-            times={times}
-            state={state}
-            stateDaily={stateDaily}
-          />
-        </div>
-        <div>
-          <h2 className="text-center">WeatherAPI</h2>
-          <WeatherAPI
-            stateWeatherApi={stateWeatherApi}
-            statusShow={statusShow}
-          />
-        </div>
+
+        <OpenMeteo
+          statusShow={statusShow}
+          times={times}
+          state={state}
+          stateDaily={stateDaily}
+        />
+
+        <WeatherAPI stateWeatherApi={stateWeatherApi} statusShow={statusShow} />
+
         <div></div>
       </div>
     </div>

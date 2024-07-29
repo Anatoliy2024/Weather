@@ -3,11 +3,39 @@ import { DAYS, MONTHS } from "../constants/montsAndDayWeek"
 import clsx from "clsx"
 import { Water, Windy, RainProbability } from "./iconSVG"
 
+type Condition = {
+  code: number
+  icon: string
+}
+
+type Day = Record<string, number | Condition>
+
+type Hour = Record<string, number | string | Condition>
+
+type Location = Record<string, number | string>
+
+type ForecastValue = {
+  date: string
+  day: Day
+  hour: Hour
+}
+
+type ForecastDay = ForecastValue[]
+
+type Forecast = {
+  current: object
+  forecast: {
+    forecastDay: ForecastDay
+  }
+  location: Location
+}
+// type Forecast = Pick<WeatherState, 'forecast'>
+
 export function WeatherAPI({
   stateWeatherApi,
   statusShow,
 }: {
-  stateWeatherApi: Record<string, any> | null
+  stateWeatherApi: Forecast | null
   statusShow: string
 }) {
   if (stateWeatherApi === null) return
@@ -81,7 +109,8 @@ export function WeatherAPI({
     // times: Date[],
     arrayDays: RandomObject[]
   ) => (
-    <div className="w-full select-none">
+    <div className=" select-none">
+      <h2>WeatherAPI</h2>
       <div>
         {changeDate(arrayDays[day].date).getDate()}:
         {DAYS[changeDate(arrayDays[day].date).getDay()]}:
@@ -342,8 +371,8 @@ export function WeatherAPI({
 
   // const day = 24
   return (
-    <div className="flex items-center justify-center ">
-      <div className="border border-lime-400  flex flex-col gap-4 max-w-[600px] rounded-md">
+    <div className=" ">
+      <div className="border border-lime-400  flex flex-col gap-4  rounded-md">
         {arrayDays !== null &&
           statusShow === "day" &&
           weatherFromDay(today, arrayDays)}
@@ -351,7 +380,7 @@ export function WeatherAPI({
           statusShow === "tomorrow" &&
           weatherFromDay(tomorrow, arrayDays)}
         {arrayDays !== null && statusShow === "3day" && (
-          <div className="flex w-min-full">
+          <div className="flex">
             <div className="flex gap-3">
               {renderWeather(today, arrayDays)}
               {renderWeather(tomorrow, arrayDays)}

@@ -76,7 +76,8 @@ export function OpenMeteo({
     times: Date[],
     state: Record<string, number[]>
   ) => (
-    <div className="w-full select-none">
+    <div className=" select-none">
+      <h2>open-meteo</h2>
       <div>
         {date.getDate()}:{DAYS[date.getDay()]}:{MONTHS[date.getMonth() + 1]}
       </div>
@@ -247,8 +248,8 @@ export function OpenMeteo({
 
   // const day = 24
   return (
-    <div className="flex items-center justify-center ">
-      <div className="border border-lime-400  flex flex-col gap-4 max-w-[600px] rounded-md">
+    <div className="">
+      <div className="border border-lime-400  flex flex-col gap-4  rounded-md">
         {state !== null &&
           statusShow === "day" &&
           weatherFromDay(today, times, state)}
@@ -256,7 +257,7 @@ export function OpenMeteo({
           statusShow === "tomorrow" &&
           weatherFromDay(tomorrow, times, state)}
         {state !== null && statusShow === "3day" && (
-          <div className="flex w-min-full">
+          <div className="flex ">
             <div className="flex gap-3">
               {renderWeather(today, times, state)}
               {renderWeather(tomorrow, times, state)}
