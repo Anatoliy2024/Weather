@@ -2,7 +2,7 @@ import axios from "axios"
 // const localApi = import.meta.env.VITE_WEATHER_API_KEY
 // const serverGit = process.env.VITE_WEATHER_API_KEY
 
-const apiKey = import.meta.env.VITE_WEATHER_API_KEY
+const apiKey: string = import.meta.env.VITE_WEATHER_API_KEY
 
 export const getWeatherDate = async (city: string) => {
   try {
