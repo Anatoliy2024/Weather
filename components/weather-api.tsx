@@ -17,15 +17,15 @@ type Location = Record<string, number | string>
 type ForecastValue = {
   date: string
   day: Day
-  hour: Hour
+  hour: Hour[]
 }
 
-type ForecastDay = ForecastValue[]
+// type ForecastDay = ForecastValue[]
 
 type Forecast = {
   current: object
   forecast: {
-    forecastDay: ForecastDay
+    forecastday: ForecastValue[]
   }
   location: Location
 }
@@ -39,9 +39,9 @@ export function WeatherAPI({
   statusShow: string
 }) {
   if (stateWeatherApi === null) return
-  const { forecast } = stateWeatherApi
+  const { forecast }: Pick<Forecast, "forecast"> = stateWeatherApi
 
-  const arrayDays = forecast.forecastday
+  const arrayDays: ForecastValue[] = forecast.forecastday
   const today = 0
 
   const tomorrow = 1
@@ -97,7 +97,7 @@ export function WeatherAPI({
     return array
   }
 
-  function changeDate(num: string | number): Date {
+  function changeDate(num: string): Date {
     const day = new Date(num)
     return day
   }
@@ -107,7 +107,7 @@ export function WeatherAPI({
   const weatherFromDay = (
     day: number,
     // times: Date[],
-    arrayDays: RandomObject[]
+    arrayDays: ForecastValue[]
   ) => (
     <div className=" select-none">
       <h2>WeatherAPI</h2>
@@ -117,38 +117,37 @@ export function WeatherAPI({
         {MONTHS[changeDate(arrayDays[day].date).getMonth() + 1]}
       </div>
       <ul className="flex ">
-        {arrayDays[day].hour.map(
-          (hourInfo: Record<string, any>, index: number) => {
-            const today = new Date()
-            const time = changeDate(hourInfo.time)
-            if (index % 3 === 0) {
-              const hours = arrayDays[day].hour
+        {arrayDays[day].hour.map((hourInfo: Hour, index: number) => {
+          const today = new Date()
+          const time = changeDate(hourInfo.time as string)
+          if (index % 3 === 0) {
+            const hours = arrayDays[day].hour
 
-              return (
-                <li
-                  key={index}
-                  className={clsx(
-                    "flex flex-col w-[55px] justify-center items-center  rounded-md ",
-                    (today.getHours() === time.getHours() ||
-                      today.getHours() === time.getHours() + 1 ||
-                      today.getHours() === time.getHours() + 2) &&
-                      changeDate(arrayDays[day].date).getDate() ===
-                        today.getDate()
-                      ? "border border-lime-400 bg-lime-100"
-                      : ""
-                  )}
-                >
-                  <span>
-                    {time.toLocaleTimeString("ru-RU", {
-                      hour: "2-digit",
-                      minute: "2-digit",
+            return (
+              <li
+                key={index}
+                className={clsx(
+                  "flex flex-col w-[55px] justify-center items-center  rounded-md ",
+                  (today.getHours() === time.getHours() ||
+                    today.getHours() === time.getHours() + 1 ||
+                    today.getHours() === time.getHours() + 2) &&
+                    changeDate(arrayDays[day].date).getDate() ===
+                      today.getDate()
+                    ? "border border-lime-400 bg-lime-100"
+                    : ""
+                )}
+              >
+                <span>
+                  {time.toLocaleTimeString("ru-RU", {
+                    hour: "2-digit",
+                    minute: "2-digit",
 
-                      hour12: false, // Устанавливает 24-часовой формат
-                    })}
-                  </span>
-                  {/* {code[index] ===} */}
+                    hour12: false, // Устанавливает 24-часовой формат
+                  })}
+                </span>
+                {/* {code[index] ===} */}
 
-                  {/* <WeatherIcon
+                {/* <WeatherIcon
                     weather_code={Math.max(
                       ...getArrayNumber(
                         arrayDays[day].hour,
@@ -158,55 +157,55 @@ export function WeatherAPI({
                       )
                     )}
                   /> */}
-                  <div>
-                    <img
-                      src={hourInfo.condition.icon}
-                      alt="weatherImg"
-                      width={40}
-                    />
-                  </div>
+                <div>
+                  <img
+                    src={hourInfo.condition.icon}
+                    alt="weatherImg"
+                    width={40}
+                  />
+                </div>
 
-                  <span>
-                    {hourInfo.temp_c.toString()[0] === "-" ? "" : "+"}
-                    {Math.round(getNewState(hours, "temp_c", index, 3) / 3)}
-                    {/* {Math.round(
+                <span>
+                  {hourInfo.temp_c.toString()[0] === "-" ? "" : "+"}
+                  {Math.round(getNewState(hours, "temp_c", index, 3) / 3)}
+                  {/* {Math.round(
                       (arrayDays[day].hour[index].temp_c +
                         arrayDays[day].hour[index + 1].temp_c +
                         arrayDays[day].hour[index + 2].temp_c) /
                         3
                     )} */}
-                    °
-                  </span>
-                  <span className="flex gap-1">
-                    <Windy />
-                    {Math.round(
-                      Math.max(...getArrayNumber(hours, "wind_kph", index, 3))
-                    )}
-                    {/* {Math.round(
+                  °
+                </span>
+                <span className="flex gap-1">
+                  <Windy />
+                  {Math.round(
+                    Math.max(...getArrayNumber(hours, "wind_kph", index, 3))
+                  )}
+                  {/* {Math.round(
                       Math.max(
                         (arrayDays[day].hour[index].wind_kph,
                         arrayDays[day].hour[index + 1].wind_kph,
                         arrayDays[day].hour[index + 2].wind_kph)
                       )
                     )} */}
-                  </span>
-                  <span className="flex gap-1">
-                    <RainProbability />
-                    {Math.max(
-                      ...getArrayNumber(hours, "chance_of_rain", index, 3)
-                    )}
-                    {/* {Math.max(
+                </span>
+                <span className="flex gap-1">
+                  <RainProbability />
+                  {Math.max(
+                    ...getArrayNumber(hours, "chance_of_rain", index, 3)
+                  )}
+                  {/* {Math.max(
                       (hourInfo.chance_of_rain,
                       arrayDays[day].hour[index + 1].chance_of_rain,
                       arrayDays[day].hour[index + 2].chance_of_rain)
                     )} */}
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <Water />
-                    {getNewState(hours, "precip_mm", index, 3) === 0
-                      ? 0
-                      : getNewState(hours, "precip_mm", index, 3).toFixed(1)}
-                    {/* {hourInfo.precip_mm +
+                </span>
+                <span className="flex items-center gap-1">
+                  <Water />
+                  {getNewState(hours, "precip_mm", index, 3) === 0
+                    ? 0
+                    : getNewState(hours, "precip_mm", index, 3).toFixed(1)}
+                  {/* {hourInfo.precip_mm +
                       arrayDays[day].hour[index + 1].precip_mm +
                       arrayDays[day].hour[index + 2].precip_mm ===
                     0
@@ -216,14 +215,13 @@ export function WeatherAPI({
                           arrayDays[day].hour[index + 1].precip_mm +
                           arrayDays[day].hour[index + 2].precip_mm
                         ).toFixed(1)} */}
-                  </span>
-                </li>
-              )
-            } else {
-              return null
-            }
+                </span>
+              </li>
+            )
+          } else {
+            return null
           }
-        )}
+        })}
       </ul>
     </div>
   )

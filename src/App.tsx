@@ -80,8 +80,8 @@ function App() {
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center">
-      <div className="flex flex-col items-center gap-2 max-w-screen-md w-full px-4 ">
-        <div className="flex justify-center pb-6">Погода В городе</div>
+      <div className="flex flex-col items-center gap-2 max-w-screen-md w-full px-4">
+        <div className="flex justify-center  pb-6">Погода В городе</div>
         <div className=" flex gap-3 flex-col">
           <div className="flex gap-4">
             <input
