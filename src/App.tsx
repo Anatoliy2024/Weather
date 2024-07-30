@@ -5,7 +5,7 @@ import clsx from "clsx"
 import { UiButton } from "../ui/ui-button"
 import { getWeatherDate } from "../function/weather-api"
 import { WeatherAPI } from "../components/weather-api"
-import { getMeteoMaticsData } from "../function/meteoMatics"
+// import { getMeteoMaticsData } from "../function/meteoMatics"
 // import { getOpenWeather } from "../function/open-wather"
 
 function App() {
@@ -36,15 +36,15 @@ function App() {
           fetchWeatherByCity(city), // Ваш основной запрос
           getWeatherDate(city), // Дополнительный запрос
           // getOpenWeather(city),
-          getMeteoMaticsData(city),
+          // getMeteoMaticsData(city),
         ])
 
         const weatherData =
           results[0].status === "fulfilled" ? results[0].value : null
         const additionalData =
           results[1].status === "fulfilled" ? results[1].value : null
-        const MeteoMaticsData =
-          results[2].status === "fulfilled" ? results[2].value : null
+        // const MeteoMaticsData =
+        //   results[2].status === "fulfilled" ? results[2].value : null
 
         if (weatherData) {
           localStorage.setItem("city", city)
@@ -72,9 +72,9 @@ function App() {
           console.log(additionalData)
         }
 
-        if (MeteoMaticsData) {
-          console.log("Данные пришли", MeteoMaticsData)
-        }
+        // if (MeteoMaticsData) {
+        //   console.log("Данные пришли", MeteoMaticsData)
+        // }
 
         setLoading(false)
       }
