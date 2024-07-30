@@ -4,6 +4,17 @@ import { getCoordinates } from "./getCoordinate"
 // const apiKey: string = import.meta.env.VITE_OPEN_WEATHER_API_KEY
 const login: string = import.meta.env.VITE_METEOMATICS_LOGIN
 const password: string = import.meta.env.VITE_METEOMATICS_PASSWORD
+// const CORS_PROXY = "https://cors-anywhere.herokuapp.com/";
+
+const formatDateToISO = (date: Date) => {
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, "0")
+  const day = String(date.getDate()).padStart(2, "0")
+  const hours = String(date.getHours()).padStart(2, "0")
+  const minutes = String(date.getMinutes()).padStart(2, "0")
+  const seconds = String(date.getSeconds()).padStart(2, "0")
+  return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}Z`
+}
 
 const meteoMaticsData = async (latitude: number, longitude: number) => {
   try {
@@ -12,16 +23,6 @@ const meteoMaticsData = async (latitude: number, longitude: number) => {
 
     currentDate.setHours(0, 0, 0, 0)
     // console.log("Дата", currentDate)
-
-    const formatDateToISO = (date: Date) => {
-      const year = date.getFullYear()
-      const month = String(date.getMonth() + 1).padStart(2, "0")
-      const day = String(date.getDate()).padStart(2, "0")
-      const hours = String(date.getHours()).padStart(2, "0")
-      const minutes = String(date.getMinutes()).padStart(2, "0")
-      const seconds = String(date.getSeconds()).padStart(2, "0")
-      return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}Z`
-    }
 
     // Форматирование текущей даты и времени в формат ISO 8601
     const start_time = formatDateToISO(currentDate)
@@ -42,11 +43,10 @@ const meteoMaticsData = async (latitude: number, longitude: number) => {
     // console.log("URL:", url)
     // console.log("login:", login)
     // console.log("password:", password)
-
+    const auth = "Basic " + btoa(`${login}:${password}`)
     const response = await axios.get(url, {
-      auth: {
-        username: login,
-        password: password,
+      headers: {
+        Authorization: auth,
       },
     })
 
