@@ -5,6 +5,8 @@ import clsx from "clsx"
 import { UiButton } from "../ui/ui-button"
 import { getWeatherDate } from "../function/weather-api"
 import { WeatherAPI } from "../components/weather-api"
+import { getMeteoMaticsData } from "../function/meteoMatics"
+// import { getOpenWeather } from "../function/open-wather"
 
 function App() {
   const [statusShow, setStatusShow] = useState<string>("day")
@@ -24,7 +26,6 @@ function App() {
       handleFetchWeather(cityLocal)
     }
   }, [])
-
   const handleFetchWeather = async (city: string) => {
     try {
       console.log(city)
@@ -34,12 +35,16 @@ function App() {
         const results = await Promise.allSettled([
           fetchWeatherByCity(city), // Ваш основной запрос
           getWeatherDate(city), // Дополнительный запрос
+          // getOpenWeather(city),
+          getMeteoMaticsData(city),
         ])
 
         const weatherData =
           results[0].status === "fulfilled" ? results[0].value : null
         const additionalData =
           results[1].status === "fulfilled" ? results[1].value : null
+        const MeteoMaticsData =
+          results[2].status === "fulfilled" ? results[2].value : null
 
         if (weatherData) {
           localStorage.setItem("city", city)
@@ -65,6 +70,10 @@ function App() {
         if (additionalData) {
           setStateWeatherApi(additionalData)
           console.log(additionalData)
+        }
+
+        if (MeteoMaticsData) {
+          console.log("Данные пришли", MeteoMaticsData)
         }
 
         setLoading(false)
