@@ -4,7 +4,7 @@ import { getCoordinates } from "./getCoordinate"
 // const apiKey: string = import.meta.env.VITE_OPEN_WEATHER_API_KEY
 const login: string = import.meta.env.VITE_METEOMATICS_LOGIN
 const password: string = import.meta.env.VITE_METEOMATICS_PASSWORD
-// const CORS_PROXY = "https://cors-anywhere.herokuapp.com/";
+const CORS_PROXY = "https://cors-anywhere.herokuapp.com/"
 
 const formatDateToISO = (date: Date) => {
   const year = date.getFullYear()
@@ -44,7 +44,7 @@ const meteoMaticsData = async (latitude: number, longitude: number) => {
     // console.log("login:", login)
     // console.log("password:", password)
     const auth = "Basic " + btoa(`${login}:${password}`)
-    const response = await axios.get(url, {
+    const response = await axios.get(CORS_PROXY + url, {
       headers: {
         Authorization: auth,
       },
