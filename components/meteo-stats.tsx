@@ -219,10 +219,26 @@ export function MeteoStats({
         {MONTHS[changeDate(day[0].time).getMonth() + 1]}
       </div>
       <ul className="flex">
-        {day.map((_: DataInfoHour, index: number) => {
+        {day.map((hourInfo: DataInfoHour, index: number) => {
           if (index % 6 === 0) {
+            const today = new Date()
+            const time = changeDate(hourInfo.time)
             return (
-              <li key={index} className="flex flex-col">
+              <li
+                key={index}
+                className={clsx(
+                  "flex flex-col rounded-md ",
+                  (today.getHours() === time.getHours() ||
+                    today.getHours() === time.getHours() + 1 ||
+                    today.getHours() === time.getHours() + 2 ||
+                    today.getHours() === time.getHours() + 3 ||
+                    today.getHours() === time.getHours() + 4 ||
+                    today.getHours() === time.getHours() + 5) &&
+                    changeDate(day[0].time).getDate() === today.getDate()
+                    ? "border border-lime-400 bg-lime-100"
+                    : ""
+                )}
+              >
                 <div>{getDayTime(index)}</div>
                 <WeatherIconMeteoSate
                   weather_code={Math.max(
