@@ -437,3 +437,34 @@ export const WeatherIcon: React.FC<WeatherIconProps> = ({ weather_code }) => {
       return null
   }
 }
+
+export const WeatherIconMeteoSate: React.FC<WeatherIconProps> = ({
+  weather_code,
+}) => {
+  switch (true) {
+    case [1, 2, 3, 4].includes(weather_code):
+      return <Icon0123 />
+    case [5, 6].includes(weather_code):
+      return <Icon4x58 />
+    case [7].includes(weather_code):
+      return <Icon5x135 />
+    case [10, 11].includes(weather_code):
+      return <Icon5x67 />
+    case [8, 9].includes(weather_code):
+      return <Icon6x135 />
+    case [12, 13].includes(weather_code):
+      return <Icon6x67 />
+    case [14, 15, 16].includes(weather_code):
+      return <Icon7x135 />
+    // case [77].includes(weather_code):
+    //   return <Icon77 />
+    case [17, 18].includes(weather_code):
+      return <Icon8x012 />
+    case [19, 20, 21, 22].includes(weather_code):
+      return <Icon8x56 />
+    case [23, 24, 25, 26, 27].includes(weather_code):
+      return <Icon9x569 />
+    default:
+      return null
+  }
+}

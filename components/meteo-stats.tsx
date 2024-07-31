@@ -1,7 +1,7 @@
 import { DAYS, MONTHS } from "../constants/montsAndDayWeek"
 
 import clsx from "clsx"
-import { Water, Windy, RainProbability } from "./iconSVG"
+import { Water, Windy, RainProbability, WeatherIconMeteoSate } from "./iconSVG"
 
 type MeteoState = {
   data: DataInfoHour[]
@@ -139,7 +139,11 @@ export function MeteoStats({
                   })}
                 </span>
                 {/* {code[index] ===} */}
-
+                <WeatherIconMeteoSate
+                  weather_code={Math.max(
+                    ...getArrayNumber(day, "coco", index, 3)
+                  )}
+                />
                 {/* <WeatherIcon
                       weather_code={Math.max(
                         ...getArrayNumber(
@@ -220,7 +224,11 @@ export function MeteoStats({
             return (
               <li key={index} className="flex flex-col">
                 <div>{getDayTime(index)}</div>
-
+                <WeatherIconMeteoSate
+                  weather_code={Math.max(
+                    ...getArrayNumber(day, "coco", index, 6)
+                  )}
+                />
                 {/* <div>
                     <img
                       src={arrayDays[day].hour[index].condition.icon}
