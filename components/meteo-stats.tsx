@@ -1,7 +1,7 @@
 import { DAYS, MONTHS } from "../constants/montsAndDayWeek"
 
 import clsx from "clsx"
-import { Water, Windy, RainProbability, WeatherIconMeteoSate } from "./iconSVG"
+import { Water, Windy, WeatherIconMeteoSate } from "./iconSVG"
 
 type MeteoState = {
   data: DataInfoHour[]
@@ -31,6 +31,7 @@ export function MeteoStats({
   statusShow: string
 }) {
   if (meteoState === null) return
+
   const { data }: { data: DataInfoHour[] } = meteoState
 
   const days = [
@@ -46,6 +47,25 @@ export function MeteoStats({
   //   (timestamp: number) => new Date(timestamp)
   // )
 
+  // function getNewState(
+  //   state: DataInfoHour[] | null,
+  //   value: keyof DataInfoHour,
+  //   index: number,
+  //   number: number
+  // ) {
+  //   if (state === null) return 0
+  //   let count = 0
+
+  //   for (let i = 0; i < number; i++) {
+  //     if (index + i < state.length && state[index + i]) {
+
+  //       count += state[index + i][value] as number
+  //     }
+  //   }
+  //   // console.log(count)
+  //   return count
+  // }
+
   function getNewState(
     state: DataInfoHour[] | null,
     value: keyof DataInfoHour,
@@ -53,14 +73,80 @@ export function MeteoStats({
     number: number
   ) {
     if (state === null) return 0
+
+    let count = 0
+    let currentIndex
+    for (let i = 0; i < number; i++) {
+      currentIndex = index + i
+
+      // Функция для поиска ближайшего ненулевого значения
+      const findClosestNonNullValue = (idx: number): number => {
+        let offset = 1
+
+        while (true) {
+          // Проверяем индекс слева
+          if (
+            idx - offset >= 0 &&
+            state[idx - offset] &&
+            state[idx - offset][value] !== null
+          ) {
+            return state[idx - offset][value] as number
+          }
+
+          // Проверяем индекс справа
+          if (
+            idx + offset < state.length &&
+            state[idx + offset] &&
+            state[idx + offset][value] !== null
+          ) {
+            return state[idx + offset][value] as number
+          }
+
+          // Если ни слева, ни справа не нашли ненулевое значение, увеличиваем смещение
+          offset++
+
+          // Если смещение становится слишком большим, возвращаем 0 или какое-то значение по умолчанию
+          if (idx - offset < 0 && idx + offset >= state.length) {
+            return 0 // или любое другое значение по умолчанию
+          }
+        }
+      }
+
+      if (currentIndex < state.length && state[currentIndex]) {
+        const valueAtCurrentIndex = state[currentIndex][value]
+        if (valueAtCurrentIndex === null) {
+          count += findClosestNonNullValue(currentIndex)
+        } else {
+          count += valueAtCurrentIndex as number
+        }
+      }
+    }
+
+    return count
+  }
+
+  function getWeatherHourly(
+    state: DataInfoHour[] | null,
+    value: keyof DataInfoHour,
+    index: number,
+    number: number
+  ) {
+    if (state === null) return 999 // Если state равно null, возвращаем 999
+
+    let array = []
     let count = 0
 
     for (let i = 0; i < number; i++) {
-      if (index + i < state.length && state[index + i]) {
-        count += state[index + i][value] as number
+      if (state[index + i] && state[index + i][value] !== null) {
+        count += state[index + i][value] as number // Суммируем ненулевые значения
+      } else {
+        array.push(state[index + i] ? state[index + i][value] : null) // Добавляем null, если значение отсутствует
       }
     }
-    // console.log(count)
+
+    // Если все значения равны null, длина массива будет равна number
+    if (array.length === number) return 999
+
     return count
   }
 
@@ -78,20 +164,82 @@ export function MeteoStats({
     return daytime
   }
 
+  // function getArrayNumber(
+  //   state: DataInfoHour[] | null,
+  //   value: keyof DataInfoHour,
+  //   index: number,
+  //   number: number
+  // ) {
+  //   if (state === null) return []
+  //   const array: number[] = []
+  //   for (let i = 0; i < number; i++) {
+  //     if (index + i < state.length && state[index + i]) {
+  //       array.push(state[index + i][value] as number)
+  //     }
+  //   }
+  //   // console.log(value, array)
+  //   return array
+  // }
+
   function getArrayNumber(
     state: DataInfoHour[] | null,
     value: keyof DataInfoHour,
     index: number,
     number: number
-  ) {
+  ): number[] {
     if (state === null) return []
+
     const array: number[] = []
-    for (let i = 0; i < number; i++) {
-      if (index + i < state.length && state[index + i]) {
-        array.push(state[index + i][value] as number)
+
+    // Функция для поиска ближайшего ненулевого значения при null
+    const findClosestNonNullValue = (idx: number): number => {
+      let offset = 1
+
+      while (true) {
+        // Проверяем индекс слева
+        if (
+          idx - offset >= 0 &&
+          state[idx - offset] &&
+          state[idx - offset][value] !== null &&
+          state[idx - offset][value] !== undefined
+        ) {
+          return state[idx - offset][value] as number
+        }
+
+        // Проверяем индекс справа
+        if (
+          idx + offset < state.length &&
+          state[idx + offset] &&
+          state[idx + offset][value] !== null &&
+          state[idx + offset][value] !== undefined
+        ) {
+          return state[idx + offset][value] as number
+        }
+
+        // Если смещение становится слишком большим, возвращаем 0 или значение по умолчанию
+        if (idx - offset < 0 && idx + offset >= state.length) {
+          return 0 // Возвращаем 0, если не нашли ненулевое значение
+        }
+
+        offset++
       }
     }
-    // console.log(value, array)
+
+    for (let i = 0; i < number; i++) {
+      const currentIndex = index + i
+      if (currentIndex < state.length && state[currentIndex]) {
+        const valueAtIndex = state[currentIndex][value]
+        if (valueAtIndex === null) {
+          // Если текущее значение null, ищем ближайшее ненулевое значение
+          array.push(findClosestNonNullValue(currentIndex))
+        } else {
+          array.push(valueAtIndex as number)
+        }
+      } else {
+        array.push(0) // Если состояние отсутствует, добавляем 0
+      }
+    }
+
     return array
   }
 
@@ -197,9 +345,12 @@ export function MeteoStats({
                 </span> */}
                 <span className="flex items-center gap-1">
                   <Water />
-                  {getNewState(day, "prcp", index, 3) === 0
+
+                  {getWeatherHourly(day, "prcp", index, 3) === 0
                     ? 0
-                    : getNewState(day, "prcp", index, 3).toFixed(1)}
+                    : getWeatherHourly(day, "prcp", index, 3) === 999
+                    ? "null"
+                    : getWeatherHourly(day, "prcp", index, 3).toFixed(1)}
                 </span>
               </li>
             )
@@ -276,9 +427,11 @@ export function MeteoStats({
 
                 <span className="flex items-center gap-1">
                   <Water />
-                  {getNewState(day, "prcp", index, 6) === 0
+                  {getWeatherHourly(day, "prcp", index, 6) === 0
                     ? 0
-                    : getNewState(day, "prcp", index, 6).toFixed(1)}
+                    : getWeatherHourly(day, "prcp", index, 6) === 999
+                    ? "null"
+                    : getWeatherHourly(day, "prcp", index, 6).toFixed(1)}
                 </span>
               </li>
             )

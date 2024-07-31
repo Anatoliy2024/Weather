@@ -31,7 +31,7 @@ const getWeatherData = async (latitude: number, longitude: number) => {
   console.log(startDate, endDate)
   const options = {
     method: "GET",
-    url: "https://meteostat.p.rapidapi.com/point/hourly",
+    url: `https://meteostat.p.rapidapi.com/point/hourly`,
     params: {
       lat: latitude,
       lon: longitude,
@@ -64,9 +64,9 @@ export const fetchWeatherMeteostat = async (city: string) => {
 
     if (coordinates !== undefined) {
       const { latitude, longitude } = coordinates
-      const weatherData = await getWeatherData(latitude, longitude)
+      const hourlyWeatherData = await getWeatherData(latitude, longitude)
 
-      return weatherData
+      return hourlyWeatherData
     }
   } catch (error) {
     console.error("Ошибка при получении данных по городу:", error)

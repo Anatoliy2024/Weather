@@ -21,7 +21,10 @@ function App() {
     null
   )
   const [stateWeatherApi, setStateWeatherApi] = useState(null)
-  const [meteoState, setMeteoState] = useState(null)
+  const [meteoState, setMeteoState] = useState<Record<
+    "hourly" | "daily",
+    any
+  > | null>(null)
   const [times, setTimes] = useState<Date[]>([])
   useEffect(() => {
     const cityLocal = localStorage.getItem("city")
