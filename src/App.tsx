@@ -5,6 +5,10 @@ import clsx from "clsx"
 import { UiButton } from "../ui/ui-button"
 import { getWeatherDate } from "../function/weather-api"
 import { WeatherAPI } from "../components/weather-api"
+import { MeteoStats } from "../components/meteo-stats"
+import { fetchWeatherMeteostat } from "../function/meteoStats"
+// import { getWeatherGovData } from "../function/weatherGov"
+// import { getTomorrowData } from "../function/tomorrow"
 // import { getMeteoMaticsData } from "../function/meteoMatics"
 // import { getOpenWeather } from "../function/open-wather"
 
@@ -17,6 +21,7 @@ function App() {
     null
   )
   const [stateWeatherApi, setStateWeatherApi] = useState(null)
+  const [meteoState, setMeteoState] = useState(null)
   const [times, setTimes] = useState<Date[]>([])
   useEffect(() => {
     const cityLocal = localStorage.getItem("city")
@@ -35,6 +40,9 @@ function App() {
         const results = await Promise.allSettled([
           fetchWeatherByCity(city), // Ваш основной запрос
           getWeatherDate(city), // Дополнительный запрос
+          fetchWeatherMeteostat(city),
+          // getWeatherGovData(city),
+          // getTomorrowData(city),
           // getOpenWeather(city),
           // getMeteoMaticsData(city),
         ])
@@ -43,8 +51,8 @@ function App() {
           results[0].status === "fulfilled" ? results[0].value : null
         const additionalData =
           results[1].status === "fulfilled" ? results[1].value : null
-        // const MeteoMaticsData =
-        //   results[2].status === "fulfilled" ? results[2].value : null
+        const weatherMeteostat =
+          results[2].status === "fulfilled" ? results[2].value : null
 
         if (weatherData) {
           localStorage.setItem("city", city)
@@ -72,9 +80,10 @@ function App() {
           console.log(additionalData)
         }
 
-        // if (MeteoMaticsData) {
-        //   console.log("Данные пришли", MeteoMaticsData)
-        // }
+        if (weatherMeteostat) {
+          setMeteoState(weatherMeteostat)
+          console.log("Данные пришли", weatherMeteostat)
+        }
 
         setLoading(false)
       }
@@ -148,7 +157,7 @@ function App() {
         />
 
         <WeatherAPI stateWeatherApi={stateWeatherApi} statusShow={statusShow} />
-
+        <MeteoStats meteoState={meteoState} statusShow={statusShow} />
         <div></div>
       </div>
     </div>
