@@ -6,7 +6,10 @@ import { UiButton } from "../ui/ui-button"
 import { getWeatherDate } from "../function/weather-api"
 import { WeatherAPI } from "../components/weather-api"
 import { MeteoStats } from "../components/meteo-stats"
+import { CrossingWeather } from "../components/crossing-weather"
 import { fetchWeatherMeteostat } from "../function/meteoStats"
+import { crosingWeather } from "../function/crosingWeather"
+// import { getNinjacData } from "../function/ninjac"
 // import { getWeatherGovData } from "../function/weatherGov"
 // import { getTomorrowData } from "../function/tomorrow"
 // import { getMeteoMaticsData } from "../function/meteoMatics"
@@ -21,10 +24,9 @@ function App() {
     null
   )
   const [stateWeatherApi, setStateWeatherApi] = useState(null)
-  const [meteoState, setMeteoState] = useState<Record<
-    "hourly" | "daily",
-    any
-  > | null>(null)
+  const [meteoState, setMeteoState] = useState(null)
+  const [сrossingDate, setCrossingDate] = useState(null)
+  // const [tomorrowDate, setTomorrowDate] = useState(null)
   const [times, setTimes] = useState<Date[]>([])
   useEffect(() => {
     const cityLocal = localStorage.getItem("city")
@@ -48,6 +50,8 @@ function App() {
           // getTomorrowData(city),
           // getOpenWeather(city),
           // getMeteoMaticsData(city),
+          // getNinjacData(city),
+          crosingWeather(city),
         ])
 
         const weatherData =
@@ -56,6 +60,10 @@ function App() {
           results[1].status === "fulfilled" ? results[1].value : null
         const weatherMeteostat =
           results[2].status === "fulfilled" ? results[2].value : null
+        // const tomorrowData =
+        //   results[3].status === "fulfilled" ? results[3].value : null
+        const crosingWeatherDate =
+          results[3].status === "fulfilled" ? results[3].value : null
 
         if (weatherData) {
           localStorage.setItem("city", city)
@@ -86,6 +94,10 @@ function App() {
         if (weatherMeteostat) {
           setMeteoState(weatherMeteostat)
           console.log("Данные пришли", weatherMeteostat)
+        }
+        if (crosingWeatherDate) {
+          setCrossingDate(crosingWeatherDate)
+          console.log("crosingWeatherDate", crosingWeatherDate)
         }
 
         setLoading(false)
@@ -161,7 +173,8 @@ function App() {
 
         <WeatherAPI stateWeatherApi={stateWeatherApi} statusShow={statusShow} />
         <MeteoStats meteoState={meteoState} statusShow={statusShow} />
-        <div></div>
+        <CrossingWeather сrossingDate={сrossingDate} statusShow={statusShow} />
+        <div>tomorrowDate</div>
       </div>
     </div>
   )
