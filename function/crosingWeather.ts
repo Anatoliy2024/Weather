@@ -12,7 +12,7 @@ const formatDateToISO = (date: Date): string => {
 }
 
 const apiKey: string = import.meta.env.VITE_CROSSING_WEATHER_API_KEY
-
+console.log(apiKey)
 export const crosingWeather = async (city: string) => {
   // Получение текущей даты и времени
   const startTime = new Date()
