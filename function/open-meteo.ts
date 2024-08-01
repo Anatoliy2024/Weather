@@ -77,7 +77,7 @@ export const fetchWeatherByCity = async (city: string) => {
       const weatherData = await getWeatherData(latitude, longitude)
       const weatherHourly = weatherData.hourly
       const weatherDaily = weatherData.daily
-      console.log({ weatherHourly, weatherDaily })
+      // console.log({ weatherHourly, weatherDaily })
       // Формирование времени
       // const times = weather.time.map((timestamp: any) => new Date(timestamp))
       // const temperatures = weather.temperature_2m

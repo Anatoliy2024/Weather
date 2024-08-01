@@ -320,6 +320,26 @@ export function CrossingWeather({
   // interface RandomObject {
   //   [key: string]: any
   // }
+  function weatheeWatherMM(
+    state: Hour[],
+    index: number,
+    number: number
+  ): number | string {
+    const rain = getNewState(state, "precip", index, number)
+
+    const snow = getNewState(state, "snow", index, number)
+
+    if (rain !== 0 && snow !== 0) {
+      return rain > snow ? rain.toFixed(1) : snow.toFixed(1)
+    } else if (rain !== 0) {
+      return rain.toFixed(1)
+    } else if (snow !== 0) {
+      return snow.toFixed(1)
+    } else {
+      return 0
+    }
+  }
+
   const weatherFromDay = (day: number) => {
     const dayData = days[day]
 
@@ -438,15 +458,15 @@ export function CrossingWeather({
                     </span>
                     <span className="flex items-center gap-1">
                       <Water />
-
-                      {getNewState(dayData.hours, "precip", index, 3) === 0
+                      {weatheeWatherMM(dayData.hours, index, 3)}
+                      {/* {getNewState(dayData.hours, "precip", index, 3) === 0
                         ? 0
                         : getNewState(
                             dayData.hours,
                             "precip",
                             index,
                             3
-                          ).toFixed(1)}
+                          ).toFixed(1)} */}
                     </span>
                   </li>
                 )
@@ -557,15 +577,15 @@ export function CrossingWeather({
 
                     <span className="flex items-center gap-1">
                       <Water />
-
-                      {getNewState(dayData.hours, "precip", index, 6) === 0
+                      {weatheeWatherMM(dayData.hours, index, 6)}
+                      {/* {getNewState(dayData.hours, "precip", index, 6) === 0
                         ? 0
                         : getNewState(
                             dayData.hours,
                             "precip",
                             index,
                             6
-                          ).toFixed(1)}
+                          ).toFixed(1)} */}
                     </span>
                   </li>
                 )

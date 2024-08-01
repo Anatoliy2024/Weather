@@ -75,6 +75,7 @@ function App() {
             const times = weatherHourly.time.map(
               (timestamp: string) => new Date(timestamp)
             )
+            console.log("open meteo", weatherHourly, weatherDaily)
             setTimes(times)
           } else {
             console.error("Нет данных о погоде")
@@ -88,12 +89,12 @@ function App() {
 
         if (additionalData) {
           setStateWeatherApi(additionalData)
-          console.log(additionalData)
+          console.log("WeatherAPI", additionalData)
         }
 
         if (weatherMeteostat) {
           setMeteoState(weatherMeteostat)
-          console.log("Данные пришли", weatherMeteostat)
+          console.log("weatherMeteostat", weatherMeteostat)
         }
         if (crosingWeatherDate) {
           setCrossingDate(crosingWeatherDate)

@@ -10,7 +10,7 @@ export const getWeatherDate = async (city: string) => {
       `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${city}&days=7`
     )
     const dataWeather = response.data
-    console.log(response.data)
+    // console.log(response.data)
     return dataWeather
   } catch (error) {
     console.error("Ошибка при получении погоды:", error)
