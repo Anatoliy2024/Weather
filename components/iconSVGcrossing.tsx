@@ -1,3 +1,46 @@
+export function WeatherIconCrossing({
+  weather_code,
+}: {
+  weather_code: string
+}) {
+  switch (true) {
+    case weather_code === "clear-night":
+      return <ClearNight />
+    case weather_code === "clear-day":
+      return <ClearDay />
+    case weather_code === "partly-cloudy-night":
+      return <PartlyCloudyNight />
+    case weather_code === "partly-cloudy-day":
+      return <PartlyCloudyDay />
+    case weather_code === "cloudy":
+      return <Cloudy />
+    case weather_code === "wind":
+      return <Wind />
+    case weather_code === "fog":
+      return <Fog />
+    case weather_code === "showers-night":
+      return <ShowersNight />
+    case weather_code === "showers-day":
+      return <ShowersDay />
+    case weather_code === "rain":
+      return <Rain />
+    case weather_code === "thunder-showers-night":
+      return <ThunderShowersNight />
+    case weather_code === "thunder-showers-day	":
+      return <ThunderShowersDay />
+    case weather_code === "thunder-rain":
+      return <ThunderRain />
+    case weather_code === "snow-showers-night":
+      return <SnowShowersNight />
+    case weather_code === "snow-showers-day	":
+      return <SnowShowersDay />
+    case weather_code === "Snow":
+      return <Snow />
+    default:
+      return null
+  }
+}
+
 const ClearDay = () => {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 57.47 57.47">

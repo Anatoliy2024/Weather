@@ -2,13 +2,21 @@ import { DAYS, MONTHS } from "../constants/montsAndDayWeek"
 
 import clsx from "clsx"
 import { Water, Windy, RainProbability } from "./iconSVG"
-
+import { WeatherIconCrossing } from "./iconSVGcrossing"
 type Day = {
   datetime: string
+  icon: string
+  tempmax: number
+  tempmin: number
+  windspeed: number
+  precipprob: number
+  precip: number
+  snow: number
   hours: Hour[]
 }
 
 type Hour = {
+  icon: string
   datetime: string
   temp: string
   [key: string]: number | string | string[]
@@ -29,6 +37,25 @@ type CrossingWeather = {
   timezone: string
 
   tzoffset: number
+}
+
+const weatherPriority: { [key: string]: number } = {
+  "clear-night": 0,
+  "clear-day": 0,
+  "partly-cloudy-night": 1,
+  "partly-cloudy-day": 1,
+  cloudy: 2,
+  wind: 3,
+  fog: 4,
+  "showers-night": 5,
+  "showers-day": 5,
+  rain: 6,
+  "thunder-showers-night": 7,
+  "thunder-showers-day": 7,
+  "thunder-rain": 8,
+  "snow-showers-night": 9,
+  "snow-showers-day": 9,
+  snow: 10,
 }
 
 export function CrossingWeather({
@@ -182,6 +209,40 @@ export function CrossingWeather({
     // console.log(value, array)
     return array
   }
+
+  function getMostSevereWeather(weather_codes: string[]): string {
+    if (weather_codes.length === 0) return "null"
+
+    // Найдите состояние с наивысшим приоритетом
+    const highestPriority = Math.max(
+      ...weather_codes.map((code) => weatherPriority[code] || 0)
+    )
+    const mostSevereWeather = weather_codes.find(
+      (code) => weatherPriority[code] === highestPriority
+    )
+
+    return mostSevereWeather as string
+  }
+
+  function getArrayWeather(
+    state: Hour[] | null,
+    index: number,
+    number: number
+  ) {
+    if (state === null) return "null"
+    const array: string[] = []
+    for (let i = 0; i < number; i++) {
+      if (index + i < state.length && state[index + i]) {
+        array.push(state[index + i].icon as string)
+      }
+    }
+    const weatherIconString = getMostSevereWeather(array)
+    // console.log(array)
+    // console.log(weatherIconString)
+    return weatherIconString
+    // console.log(value, array)
+  }
+
   ///////////////////
   //   function getArrayNumber(
   //     state: DataInfoHour[] | null,
@@ -307,17 +368,13 @@ export function CrossingWeather({
                         ...getArrayNumber(day, "coco", index, 3)
                       )}
                     /> */}
-                    <div>{hourInfo.icon}</div>
-                    {/* <WeatherIcon
-                              weather_code={Math.max(
-                                ...getArrayNumber(
-                                  arrayDays[day].hour,
-                                  "image_code",
-                                  index,
-                                  3
-                                )
-                              )}
-                            /> */}
+
+                    <div className="w-[30px] h-[30px] flex justify-center items-center">
+                      <WeatherIconCrossing
+                        weather_code={getArrayWeather(dayData.hours, index, 3)}
+                      />
+                    </div>
+
                     {/* <div>
                             <img
                               src={hourInfo.condition.icon}
@@ -368,8 +425,15 @@ export function CrossingWeather({
                     </span>
                     <span className="flex gap-1">
                       <RainProbability />
-                      {Math.max(
-                        ...getArrayNumber(dayData.hours, "precipprob", index, 3)
+                      {Math.round(
+                        Math.max(
+                          ...getArrayNumber(
+                            dayData.hours,
+                            "precipprob",
+                            index,
+                            3
+                          )
+                        )
                       )}
                     </span>
                     <span className="flex items-center gap-1">
@@ -435,7 +499,12 @@ export function CrossingWeather({
                         ...getArrayNumber(dayData.hours, "coco", index, 6)
                       )}
                     /> */}
-                    <div>{hourInfo.icon}</div>
+                    {/* <div>{hourInfo.icon}</div> */}
+                    <div className="w-[30px] h-[30px] flex justify-center items-center self-center">
+                      <WeatherIconCrossing
+                        weather_code={getArrayWeather(dayData.hours, index, 6)}
+                      />
+                    </div>
                     {/* <div>
                                 <img
                                   src={arrayDays[day].hour[index].condition.icon}
@@ -474,13 +543,21 @@ export function CrossingWeather({
                     </span>
                     <span className="flex gap-1">
                       <RainProbability />
-                      {Math.max(
-                        ...getArrayNumber(dayData.hours, "precipprob", index, 6)
+                      {Math.round(
+                        Math.max(
+                          ...getArrayNumber(
+                            dayData.hours,
+                            "precipprob",
+                            index,
+                            6
+                          )
+                        )
                       )}
                     </span>
 
                     <span className="flex items-center gap-1">
                       <Water />
+
                       {getNewState(dayData.hours, "precip", index, 6) === 0
                         ? 0
                         : getNewState(
@@ -513,6 +590,61 @@ export function CrossingWeather({
               {renderWeather(tomorrow)}
               {renderWeather(nextTomorrow)}
             </div>
+          </div>
+        )}
+        {days !== null && statusShow === "week" && (
+          <div className="w-full select-none">
+            <ul className="flex ">
+              {days.map((day: Day, index: number) => {
+                if (days !== null) {
+                  const dayData = days[index]
+
+                  return (
+                    <li
+                      key={index}
+                      className={clsx(
+                        "flex flex-col w-[55px] justify-center items-center  rounded-md "
+                      )}
+                    >
+                      <div className="flex flex-col">
+                        <span>{changeDate(dayData.datetime).getDate()}</span>
+                        <span>
+                          {DAYS[changeDate(dayData.datetime).getDay()]}
+                        </span>
+                        {/* <span>{MONTHS[time.getMonth() + 1]}</span> */}
+                      </div>
+
+                      {/* <WeatherIcon
+                            weather_code={stateDaily.weather_code[index]}
+                          /> */}
+                      <div className="w-[30px] h-[30px] flex justify-center items-center">
+                        <WeatherIconCrossing weather_code={dayData.icon} />
+                      </div>
+                      <span className="rounded bg-green-200">
+                        {dayData.tempmax.toString()[0] === "-" ? "" : "+"}
+                        {Math.round(dayData.tempmax)}°
+                      </span>
+                      <span className="rounded bg-blue-200">
+                        {dayData.tempmin.toString()[0] === "-" ? "" : "+"}
+                        {Math.round(dayData.tempmin)}°
+                      </span>
+                      <span className="flex gap-1">
+                        <Windy />
+                        {Math.round(dayData.windspeed)}
+                      </span>
+                      <span className="flex gap-1">
+                        <RainProbability />
+                        {Math.round(dayData.precipprob)}
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <Water />
+                        {Math.max(dayData.precip, dayData.snow).toFixed(1)}
+                      </span>
+                    </li>
+                  )
+                }
+              })}
+            </ul>
           </div>
         )}
       </div>
