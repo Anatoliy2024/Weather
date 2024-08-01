@@ -31,6 +31,12 @@ type Forecast = {
 }
 // type Forecast = Pick<WeatherState, 'forecast'>
 
+function changeHours(day: string): Date {
+  const value = new Date(day)
+
+  return value
+}
+
 export function WeatherAPI({
   stateWeatherApi,
   statusShow,
@@ -256,26 +262,32 @@ export function WeatherAPI({
           // )
 
           // index += differenceInHours
-          const hours = arrayDays[day].hour
-
           // getArrayNumber(hours, "wind_kph", index, 6)
           if (index % 6 === 0) {
-            // console.log(
-            //   Math.max(
-            //     hours[index].wind_kph,
-            //     hours[index + 1].wind_kph,
-            //     hours[index + 2].wind_kph,
-            //     hours[index + 3].wind_kph,
-            //     hours[index + 4].wind_kph,
-            //     hours[index + 5].wind_kph
-            //   )
-            // )
+            const hours = arrayDays[day].hour
+            const today = new Date()
+            const change = changeHours(hours[index].time as string)
+
             if (
               typeof arrayDays[day].hour[index].condition === "object" &&
               arrayDays[day].hour[index].condition !== null
             ) {
               return (
-                <li key={index} className="flex flex-col">
+                <li
+                  key={index}
+                  className={clsx(
+                    "flex flex-col",
+                    (today.getHours() === change.getHours() ||
+                      today.getHours() === change.getHours() + 1 ||
+                      today.getHours() === change.getHours() + 2 ||
+                      today.getHours() === change.getHours() + 3 ||
+                      today.getHours() === change.getHours() + 4 ||
+                      today.getHours() === change.getHours() + 5) &&
+                      change.getDate() === today.getDate()
+                      ? "border border-lime-400 bg-lime-100"
+                      : ""
+                  )}
+                >
                   <div>{getDayTime(index)}</div>
                   {/* <WeatherIcon
                     weather_code={Math.max(
@@ -415,16 +427,28 @@ export function WeatherAPI({
                     typeof dayInfo.condition === "object" &&
                     dayInfo.condition !== null
                   ) {
+                    const today = new Date()
+                    const someDate = changeDate(day.date)
+                    const weekend =
+                      DAYS[someDate.getDay()] === "Сб" ||
+                      DAYS[someDate.getDay()] === "Вс"
+                        ? "text-red-500"
+                        : ""
                     return (
                       <li
                         key={index}
                         className={clsx(
-                          "flex flex-col w-[55px] justify-center items-center  rounded-md "
+                          "flex flex-col w-[55px] justify-center items-center  rounded-md ",
+                          today.getDate() === someDate.getDate()
+                            ? "border border-violet-700 bg-lime-100/50"
+                            : ""
                         )}
                       >
                         <div className="flex flex-col">
-                          <span>{changeDate(day.date).getDate()}</span>
-                          <span>{DAYS[changeDate(day.date).getDay()]}</span>
+                          <span className={weekend}>{someDate.getDate()}</span>
+                          <span className={weekend}>
+                            {DAYS[someDate.getDay()]}
+                          </span>
                           {/* <span>{MONTHS[time.getMonth() + 1]}</span> */}
                         </div>
 

@@ -70,6 +70,11 @@ export function OpenMeteo({
     // console.log(value, array)
     return array
   }
+  // function changeHours(day: string): Date {
+  //   const value = new Date(day)
+
+  //   return value
+  // }
 
   const weatherFromDay = (
     date: Date,
@@ -181,7 +186,7 @@ export function OpenMeteo({
       <ul className="flex">
         {times
           .filter((time) => time.getDate() === date.getDate())
-          .map((_, index) => {
+          .map((hour, index) => {
             const today = new Date()
 
             const differenceInMilliseconds = date.getTime() - today.getTime()
@@ -192,8 +197,23 @@ export function OpenMeteo({
             index += differenceInHours
 
             if (index % 6 === 0) {
+              // const changeTime = changeHours(hour)
               return (
-                <li key={index} className="flex flex-col">
+                <li
+                  key={index}
+                  className={clsx(
+                    "flex flex-col",
+                    (today.getHours() === hour.getHours() ||
+                      today.getHours() === hour.getHours() + 1 ||
+                      today.getHours() === hour.getHours() + 2 ||
+                      today.getHours() === hour.getHours() + 3 ||
+                      today.getHours() === hour.getHours() + 4 ||
+                      today.getHours() === hour.getHours() + 5) &&
+                      today.getDate() === hour.getDate()
+                      ? "border border-lime-400 bg-lime-100"
+                      : ""
+                  )}
+                >
                   <div>{getDayTime(index)}</div>
                   <WeatherIcon
                     weather_code={Math.max(
@@ -270,16 +290,24 @@ export function OpenMeteo({
             <ul className="flex ">
               {timesDaily?.map((time: Date, index: number) => {
                 if (stateDaily !== null) {
+                  const today = new Date()
+                  const weekend =
+                    DAYS[time.getDay()] === "Сб" || DAYS[time.getDay()] === "Вс"
+                      ? "text-red-500"
+                      : ""
                   return (
                     <li
                       key={index}
                       className={clsx(
-                        "flex flex-col w-[55px] justify-center items-center  rounded-md "
+                        "flex flex-col w-[55px] justify-center items-center  rounded-md ",
+                        today.getDate() === time.getDate()
+                          ? "border border-violet-700 bg-lime-100/50"
+                          : ""
                       )}
                     >
                       <div className="flex flex-col">
-                        <span>{time.getDate()}</span>
-                        <span>{DAYS[time.getDay()]}</span>
+                        <span className={weekend}>{time.getDate()}</span>
+                        <span className={weekend}>{DAYS[time.getDay()]}</span>
                         {/* <span>{MONTHS[time.getMonth() + 1]}</span> */}
                       </div>
 

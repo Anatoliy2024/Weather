@@ -618,18 +618,27 @@ export function CrossingWeather({
               {days.map((day: Day, index: number) => {
                 if (days !== null) {
                   const dayData = days[index]
-
+                  const today = new Date()
+                  const someDay = changeDate(dayData.datetime)
+                  const weekend =
+                    DAYS[someDay.getDay()] === "Сб" ||
+                    DAYS[someDay.getDay()] === "Вс"
+                      ? "text-red-500"
+                      : ""
                   return (
                     <li
                       key={index}
                       className={clsx(
-                        "flex flex-col w-[55px] justify-center items-center  rounded-md "
+                        "flex flex-col w-[55px] justify-center items-center  rounded-md ",
+                        today.getDate() === someDay.getDate()
+                          ? "border border-violet-700 bg-lime-100/50"
+                          : ""
                       )}
                     >
                       <div className="flex flex-col">
-                        <span>{changeDate(dayData.datetime).getDate()}</span>
-                        <span>
-                          {DAYS[changeDate(dayData.datetime).getDay()]}
+                        <span className={weekend}>{someDay.getDate()}</span>
+                        <span className={weekend}>
+                          {DAYS[someDay.getDay()]}
                         </span>
                         {/* <span>{MONTHS[time.getMonth() + 1]}</span> */}
                       </div>
