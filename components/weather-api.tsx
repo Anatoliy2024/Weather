@@ -14,7 +14,7 @@ type Hour = Record<string, number | string | Condition>
 
 type Location = Record<string, number | string>
 
-type ForecastValue = {
+export type ForecastValue = {
   date: string
   day: Day
   hour: Hour[]
@@ -22,7 +22,7 @@ type ForecastValue = {
 
 // type ForecastDay = ForecastValue[]
 
-type Forecast = {
+export type Forecast = {
   current: object
   forecast: {
     forecastday: ForecastValue[]
@@ -37,6 +37,56 @@ function changeHours(day: string): Date {
   return value
 }
 
+export function getNewState(
+  state: Hour[] | null,
+  value: string,
+  index: number,
+  number: number
+) {
+  if (state === null) return 0
+  let count = 0
+
+  for (let i = 0; i < number; i++) {
+    count += state[index + i][value] as number
+  }
+  // console.log(count)
+  return count
+}
+
+function getDayTime(index: number) {
+  let daytime: string = ""
+  if (index % 24 === 0) {
+    daytime = "Ночь"
+  } else if (index % 24 === 6) {
+    daytime = "Утро"
+  } else if (index % 24 === 12) {
+    daytime = "День"
+  } else if (index % 24 === 18) {
+    daytime = "Вечер"
+  }
+  return daytime
+}
+
+export function getArrayNumber(
+  state: Hour[] | null,
+  value: string,
+  index: number,
+  number: number
+) {
+  if (state === null) return []
+  const array: number[] = []
+  for (let i = 0; i < number; i++) {
+    array.push(state[index + i][value] as number)
+  }
+  // console.log(value, array)
+  return array
+}
+
+function changeDate(num: string): Date {
+  const day = new Date(num)
+  return day
+}
+
 export function WeatherAPI({
   stateWeatherApi,
   statusShow,
@@ -44,7 +94,7 @@ export function WeatherAPI({
   stateWeatherApi: Forecast | null
   statusShow: string
 }) {
-  if (stateWeatherApi === null) return
+  if (stateWeatherApi === null) return null
   const { forecast }: Pick<Forecast, "forecast"> = stateWeatherApi
 
   const arrayDays: ForecastValue[] = forecast.forecastday
@@ -58,55 +108,6 @@ export function WeatherAPI({
   //   (timestamp: number) => new Date(timestamp)
   // )
 
-  function getNewState(
-    state: Hour[] | null,
-    value: string,
-    index: number,
-    number: number
-  ) {
-    if (state === null) return 0
-    let count = 0
-
-    for (let i = 0; i < number; i++) {
-      count += state[index + i][value] as number
-    }
-    // console.log(count)
-    return count
-  }
-
-  function getDayTime(index: number) {
-    let daytime: string = ""
-    if (index % 24 === 0) {
-      daytime = "Ночь"
-    } else if (index % 24 === 6) {
-      daytime = "Утро"
-    } else if (index % 24 === 12) {
-      daytime = "День"
-    } else if (index % 24 === 18) {
-      daytime = "Вечер"
-    }
-    return daytime
-  }
-
-  function getArrayNumber(
-    state: Hour[] | null,
-    value: string,
-    index: number,
-    number: number
-  ) {
-    if (state === null) return []
-    const array: number[] = []
-    for (let i = 0; i < number; i++) {
-      array.push(state[index + i][value] as number)
-    }
-    // console.log(value, array)
-    return array
-  }
-
-  function changeDate(num: string): Date {
-    const day = new Date(num)
-    return day
-  }
   // interface RandomObject {
   //   [key: string]: any
   // }
@@ -116,7 +117,6 @@ export function WeatherAPI({
     arrayDays: ForecastValue[]
   ) => (
     <div className=" select-none">
-      <h2>WeatherAPI</h2>
       <div>
         {changeDate(arrayDays[day].date).getDate()}:
         {DAYS[changeDate(arrayDays[day].date).getDay()]}:
@@ -132,6 +132,14 @@ export function WeatherAPI({
               typeof hourInfo.condition === "object" &&
               hourInfo.condition !== null
             ) {
+              const rainProbably = Math.max(
+                ...getArrayNumber(hours, "chance_of_rain", index, 3)
+              )
+              const precipitation =
+                getNewState(hours, "precip_mm", index, 3) === 0
+                  ? 0
+                  : getNewState(hours, "precip_mm", index, 3).toFixed(1)
+
               return (
                 <li
                   key={index}
@@ -200,30 +208,17 @@ export function WeatherAPI({
                   </span>
                   <span className="flex gap-1">
                     <RainProbability />
-                    {Math.max(
-                      ...getArrayNumber(hours, "chance_of_rain", index, 3)
-                    )}
+                    {rainProbably}
                     {/* {Math.max(
-                        (hourInfo.chance_of_rain,
-                        arrayDays[day].hour[index + 1].chance_of_rain,
-                        arrayDays[day].hour[index + 2].chance_of_rain)
-                      )} */}
+                      ...getArrayNumber(hours, "chance_of_rain", index, 3)
+                    )} */}
                   </span>
                   <span className="flex items-center gap-1">
                     <Water />
-                    {getNewState(hours, "precip_mm", index, 3) === 0
+                    {precipitation}
+                    {/* {getNewState(hours, "precip_mm", index, 3) === 0
                       ? 0
-                      : getNewState(hours, "precip_mm", index, 3).toFixed(1)}
-                    {/* {hourInfo.precip_mm +
-                        arrayDays[day].hour[index + 1].precip_mm +
-                        arrayDays[day].hour[index + 2].precip_mm ===
-                      0
-                        ? 0
-                        : (
-                            hourInfo.precip_mm +
-                            arrayDays[day].hour[index + 1].precip_mm +
-                            arrayDays[day].hour[index + 2].precip_mm
-                          ).toFixed(1)} */}
+                      : getNewState(hours, "precip_mm", index, 3).toFixed(1)} */}
                   </span>
                 </li>
               )
@@ -272,11 +267,19 @@ export function WeatherAPI({
               typeof arrayDays[day].hour[index].condition === "object" &&
               arrayDays[day].hour[index].condition !== null
             ) {
+              const rainProbably = Math.max(
+                ...getArrayNumber(hours, "chance_of_rain", index, 6)
+              )
+              const precipitation =
+                getNewState(hours, "precip_mm", index, 6) === 0
+                  ? 0
+                  : getNewState(hours, "precip_mm", index, 6).toFixed(1)
+
               return (
                 <li
                   key={index}
                   className={clsx(
-                    "flex flex-col",
+                    "flex flex-col max-w-[48px]",
                     (today.getHours() === change.getHours() ||
                       today.getHours() === change.getHours() + 1 ||
                       today.getHours() === change.getHours() + 2 ||
@@ -289,11 +292,7 @@ export function WeatherAPI({
                   )}
                 >
                   <div>{getDayTime(index)}</div>
-                  {/* <WeatherIcon
-                    weather_code={Math.max(
-                      ...getArrayNumber(state, "weather_code", index, 6)
-                    )}
-                  /> */}
+
                   <div>
                     <img
                       src={arrayDays[day].hour[index].condition.icon}
@@ -301,27 +300,10 @@ export function WeatherAPI({
                       width={40}
                     />
                   </div>
-                  {/* <span>
-                    {state.temperature_2m[index].toString()[0] === "-" ? "" : "+"}
-                    {Math.round(
-                      getNewState(state, "temperature_2m", index, 6) / 6
-                    )}
-                    °
-                  </span> */}
 
                   <span>
                     {hours[index].temp_c.toString()[0] === "-" ? "" : "+"}
-                    {Math.round(getNewState(hours, "temp_c", index, 6) / 6)}
-                    {/* {Math.round(
-                      (arrayDays[day].hour[index].temp_c +
-                        arrayDays[day].hour[index + 1].temp_c +
-                        arrayDays[day].hour[index + 2].temp_c +
-                        arrayDays[day].hour[index + 3].temp_c +
-                        arrayDays[day].hour[index + 4].temp_c +
-                        arrayDays[day].hour[index + 5].temp_c) /
-                        6
-                    )} */}
-                    °
+                    {Math.round(getNewState(hours, "temp_c", index, 6) / 6)}°
                   </span>
 
                   <span className="flex gap-1">
@@ -329,57 +311,21 @@ export function WeatherAPI({
                     {Math.round(
                       Math.max(...getArrayNumber(hours, "wind_kph", index, 6))
                     )}
-                    {/* {getArrayNumber(hours,'wind_kph',index,6)}
-                    {Math.round(
-                      Math.max(
-                        ...[
-                          hours[index].wind_kph,
-                          hours[index + 1].wind_kph,
-                          hours[index + 2].wind_kph,
-                          hours[index + 3].wind_kph,
-                          hours[index + 4].wind_kph,
-                          hours[index + 5].wind_kph,
-                        ]
-                      )
-                    )} */}
                   </span>
                   <span className="flex gap-1">
                     <RainProbability />
-                    {Math.max(
-                      ...getArrayNumber(hours, "chance_of_rain", index, 6)
-                    )}
+                    {rainProbably}
                     {/* {Math.max(
-                      (arrayDays[day].hour[index].chance_of_rain,
-                      arrayDays[day].hour[index + 1].chance_of_rain,
-                      arrayDays[day].hour[index + 2].chance_of_rain,
-                      arrayDays[day].hour[index + 3].chance_of_rain,
-                      arrayDays[day].hour[index + 4].chance_of_rain,
-                      arrayDays[day].hour[index + 5].chance_of_rain)
+                      ...getArrayNumber(hours, "chance_of_rain", index, 6)
                     )} */}
                   </span>
 
                   <span className="flex items-center gap-1">
                     <Water />
-                    {getNewState(hours, "precip_mm", index, 6) === 0
+                    {precipitation}
+                    {/* {getNewState(hours, "precip_mm", index, 6) === 0
                       ? 0
-                      : getNewState(hours, "precip_mm", index, 6).toFixed(1)}
-
-                    {/* {arrayDays[day].hour[index].precip_mm +
-                      arrayDays[day].hour[index + 1].precip_mm +
-                      arrayDays[day].hour[index + 2].precip_mm +
-                      arrayDays[day].hour[index + 3].precip_mm +
-                      arrayDays[day].hour[index + 4].precip_mm +
-                      arrayDays[day].hour[index + 5].precip_mm ===
-                    0
-                      ? 0
-                      : (
-                          arrayDays[day].hour[index].precip_mm +
-                          arrayDays[day].hour[index + 1].precip_mm +
-                          arrayDays[day].hour[index + 2].precip_mm +
-                          arrayDays[day].hour[index + 3].precip_mm +
-                          arrayDays[day].hour[index + 4].precip_mm +
-                          arrayDays[day].hour[index + 5].precip_mm
-                        ).toFixed(1)} */}
+                      : getNewState(hours, "precip_mm", index, 6).toFixed(1)} */}
                   </span>
                 </li>
               )
@@ -395,6 +341,7 @@ export function WeatherAPI({
   // const day = 24
   return (
     <div className=" ">
+      <h2 className="text-center">WeatherAPI</h2>
       <div className="border border-lime-400  flex flex-col gap-4  rounded-md">
         {arrayDays !== null &&
           statusShow === "day" &&

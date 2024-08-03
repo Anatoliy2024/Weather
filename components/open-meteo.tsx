@@ -3,6 +3,51 @@ import { DAYS, MONTHS } from "../constants/montsAndDayWeek"
 import clsx from "clsx"
 import { WeatherIcon, Water, Windy, RainProbability } from "./iconSVG"
 
+export function getNewState(
+  state: Record<string, number[]> | null,
+  value: string,
+  index: number,
+  number: number
+) {
+  if (state === null) return 0
+  let count = 0
+
+  for (let i = 0; i < number; i++) {
+    count += state[value][index + i]
+  }
+  // console.log(count)
+  return count
+}
+
+export function getDayTime(index: number) {
+  let daytime: string = ""
+  if (index % 24 === 0) {
+    daytime = "Ночь"
+  } else if (index % 24 === 6) {
+    daytime = "Утро"
+  } else if (index % 24 === 12) {
+    daytime = "День"
+  } else if (index % 24 === 18) {
+    daytime = "Вечер"
+  }
+  return daytime
+}
+
+export function getArrayNumber(
+  state: Record<string, number[]> | null,
+  value: string,
+  index: number,
+  number: number
+) {
+  if (state === null) return []
+  const array: number[] = []
+  for (let i = 0; i < number; i++) {
+    array.push(state[value][index + i])
+  }
+  // console.log(value, array)
+  return array
+}
+
 export function OpenMeteo({
   statusShow,
   state,
@@ -26,50 +71,6 @@ export function OpenMeteo({
     (timestamp: number) => new Date(timestamp)
   )
 
-  function getNewState(
-    state: Record<string, number[]> | null,
-    value: string,
-    index: number,
-    number: number
-  ) {
-    if (state === null) return 0
-    let count = 0
-
-    for (let i = 0; i < number; i++) {
-      count += state[value][index + i]
-    }
-    // console.log(count)
-    return count
-  }
-
-  function getDayTime(index: number) {
-    let daytime: string = ""
-    if (index % 24 === 0) {
-      daytime = "Ночь"
-    } else if (index % 24 === 6) {
-      daytime = "Утро"
-    } else if (index % 24 === 12) {
-      daytime = "День"
-    } else if (index % 24 === 18) {
-      daytime = "Вечер"
-    }
-    return daytime
-  }
-
-  function getArrayNumber(
-    state: Record<string, number[]> | null,
-    value: string,
-    index: number,
-    number: number
-  ) {
-    if (state === null) return []
-    const array: number[] = []
-    for (let i = 0; i < number; i++) {
-      array.push(state[value][index + i])
-    }
-    // console.log(value, array)
-    return array
-  }
   // function changeHours(day: string): Date {
   //   const value = new Date(day)
 
@@ -82,7 +83,6 @@ export function OpenMeteo({
     state: Record<string, number[]>
   ) => (
     <div className=" select-none">
-      <h2>open-meteo</h2>
       <div>
         {date.getDate()}:{DAYS[date.getDay()]}:{MONTHS[date.getMonth() + 1]}
       </div>
@@ -99,6 +99,15 @@ export function OpenMeteo({
 
             index += differenceInHours
             if (index % 3 === 0) {
+              const rainProbably = Math.max(
+                ...getArrayNumber(state, "precipitation_probability", index, 3)
+              )
+              const precipitation =
+                getNewState(state, "precipitation", index, 3) === 0
+                  ? 0
+                  : getNewState(state, "precipitation", index, 3).toFixed(1)
+              // setRainProbably((prev) => ({ ...prev,openMeteo:{...prev.openMeteo,today:{rainProbably:[...prev.openMeteo.today.rainProbably],}} }))
+
               return (
                 <li
                   key={index}
@@ -147,22 +156,11 @@ export function OpenMeteo({
                   </span>
                   <span className="flex gap-1">
                     <RainProbability />
-                    {Math.max(
-                      ...getArrayNumber(
-                        state,
-                        "precipitation_probability",
-                        index,
-                        3
-                      )
-                    )}
+                    {rainProbably}
                   </span>
                   <span className="flex items-center gap-1">
                     <Water />
-                    {getNewState(state, "precipitation", index, 3) === 0
-                      ? 0
-                      : getNewState(state, "precipitation", index, 3).toFixed(
-                          1
-                        )}
+                    {precipitation}
                   </span>
                 </li>
               )
@@ -181,7 +179,7 @@ export function OpenMeteo({
   ) => (
     <div className="select-none" key={date.getDate()}>
       <div>
-        {date.getDate()}:{DAYS[date.getDay()]}:{MONTHS[date.getMonth()]}
+        {date.getDate()}:{DAYS[date.getDay()]}:{MONTHS[date.getMonth() + 1]}
       </div>
       <ul className="flex">
         {times
@@ -197,7 +195,14 @@ export function OpenMeteo({
             index += differenceInHours
 
             if (index % 6 === 0) {
-              // const changeTime = changeHours(hour)
+              const rainProbably = Math.max(
+                ...getArrayNumber(state, "precipitation_probability", index, 6)
+              )
+              const precipitation =
+                getNewState(state, "precipitation", index, 6) === 0
+                  ? 0
+                  : getNewState(state, "precipitation", index, 6).toFixed(1)
+
               return (
                 <li
                   key={index}
@@ -239,24 +244,13 @@ export function OpenMeteo({
                   </span>
                   <span className="flex gap-1">
                     <RainProbability />
-                    {Math.max(
-                      ...getArrayNumber(
-                        state,
-                        "precipitation_probability",
-                        index,
-                        6
-                      )
-                    )}
+                    {rainProbably}
                     {/* {state.precipitation_probability[index]} */}
                   </span>
 
                   <span className="flex items-center gap-1">
                     <Water />
-                    {getNewState(state, "precipitation", index, 6) === 0
-                      ? 0
-                      : getNewState(state, "precipitation", index, 6).toFixed(
-                          1
-                        )}
+                    {precipitation}
                   </span>
                 </li>
               )
@@ -269,6 +263,7 @@ export function OpenMeteo({
   // const day = 24
   return (
     <div className="">
+      <h2 className="text-center">open-meteo</h2>
       <div className="border border-lime-400  flex flex-col gap-4  rounded-md">
         {state !== null &&
           statusShow === "day" &&
@@ -295,6 +290,7 @@ export function OpenMeteo({
                     DAYS[time.getDay()] === "Сб" || DAYS[time.getDay()] === "Вс"
                       ? "text-red-500"
                       : ""
+
                   return (
                     <li
                       key={index}

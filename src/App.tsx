@@ -6,9 +6,11 @@ import { UiButton } from "../ui/ui-button"
 import { getWeatherDate } from "../function/weather-api"
 import { WeatherAPI } from "../components/weather-api"
 import { MeteoStats } from "../components/meteo-stats"
+import { AverageChanceOfRain } from "../components/average-chance-of-rain"
 import { CrossingWeather } from "../components/crossing-weather"
 import { fetchWeatherMeteostat } from "../function/meteoStats"
 import { crosingWeather } from "../function/crosingWeather"
+// import { getWeatherByLocation } from "../function/weatherByLocation"
 // import { getNinjacData } from "../function/ninjac"
 // import { getWeatherGovData } from "../function/weatherGov"
 // import { getTomorrowData } from "../function/tomorrow"
@@ -19,7 +21,10 @@ function App() {
   const [statusShow, setStatusShow] = useState<string>("day")
   const [cityValue, setCityValue] = useState("")
   const [loading, setLoading] = useState(false)
-  const [state, setState] = useState<Record<string, number[]> | null>(null)
+  const [stateHoyrly, setStateHoyrly] = useState<Record<
+    string,
+    number[]
+  > | null>(null)
   const [stateDaily, setStateDaily] = useState<Record<string, number[]> | null>(
     null
   )
@@ -28,6 +33,7 @@ function App() {
   const [сrossingDate, setCrossingDate] = useState(null)
   // const [tomorrowDate, setTomorrowDate] = useState(null)
   const [times, setTimes] = useState<Date[]>([])
+
   useEffect(() => {
     const cityLocal = localStorage.getItem("city")
     if (cityLocal) {
@@ -52,6 +58,7 @@ function App() {
           // getMeteoMaticsData(city),
           // getNinjacData(city),
           crosingWeather(city),
+          // getWeatherByLocation(city),
         ])
 
         const weatherData =
@@ -64,13 +71,15 @@ function App() {
         //   results[3].status === "fulfilled" ? results[3].value : null
         const crosingWeatherDate =
           results[3].status === "fulfilled" ? results[3].value : null
+        // const weatherByLocation =
+        //   results[4].status === "fulfilled" ? results[4].value : null
 
         if (weatherData) {
           localStorage.setItem("city", city)
           const { weatherHourly, weatherDaily } = weatherData
 
           if (weatherHourly && weatherDaily) {
-            setState(weatherHourly)
+            setStateHoyrly(weatherHourly)
             setStateDaily(weatherDaily)
             const times = weatherHourly.time.map(
               (timestamp: string) => new Date(timestamp)
@@ -100,6 +109,10 @@ function App() {
           setCrossingDate(crosingWeatherDate)
           console.log("crosingWeatherDate", crosingWeatherDate)
         }
+        // if (weatherByLocation) {
+        //   // setCrossingDate(crosingWeatherDate)
+        //   console.log("weatherByLocation", weatherByLocation)
+        // }
 
         setLoading(false)
       }
@@ -114,7 +127,7 @@ function App() {
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center">
-      <div className="flex flex-col items-center gap-2 max-w-screen-md w-full px-4">
+      <div className="flex flex-col items-center gap-2 max-w-screen-md w-full px-4 pb-8">
         <div className="flex justify-center  pb-6">Погода В городе</div>
         <div className=" flex gap-3 flex-col">
           <div className="flex gap-4">
@@ -164,18 +177,25 @@ function App() {
             </UiButton>
           </div>
         </div>
-
+        <AverageChanceOfRain
+          times={times}
+          state={stateHoyrly}
+          stateDaily={stateDaily}
+          stateWeatherApi={stateWeatherApi}
+          meteoState={meteoState}
+          сrossingDate={сrossingDate}
+          statusShow={statusShow}
+        />
         <OpenMeteo
           statusShow={statusShow}
           times={times}
-          state={state}
+          state={stateHoyrly}
           stateDaily={stateDaily}
         />
 
         <WeatherAPI stateWeatherApi={stateWeatherApi} statusShow={statusShow} />
         <MeteoStats meteoState={meteoState} statusShow={statusShow} />
         <CrossingWeather сrossingDate={сrossingDate} statusShow={statusShow} />
-        <div>tomorrowDate</div>
       </div>
     </div>
   )

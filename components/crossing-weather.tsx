@@ -3,7 +3,8 @@ import { DAYS, MONTHS } from "../constants/montsAndDayWeek"
 import clsx from "clsx"
 import { Water, Windy, RainProbability } from "./iconSVG"
 import { WeatherIconCrossing } from "./iconSVGcrossing"
-type Day = {
+
+export type Day = {
   datetime: string
   icon: string
   tempmax: number
@@ -15,14 +16,14 @@ type Day = {
   hours: Hour[]
 }
 
-type Hour = {
+export type Hour = {
   icon: string
   datetime: string
   temp: string
   [key: string]: number | string | string[]
 }
 
-type CrossingWeather = {
+export type CrossingWeather = {
   address: string
   days: Day[]
   latitude: number
@@ -58,6 +59,61 @@ const weatherPriority: { [key: string]: number } = {
   snow: 10,
 }
 
+export function weatheeWatherMM(
+  state: Hour[],
+  index: number,
+  number: number
+): number | string {
+  const rain = getNewState(state, "precip", index, number)
+
+  const snow = getNewState(state, "snow", index, number)
+
+  if (rain !== 0 && snow !== 0) {
+    return rain > snow ? rain.toFixed(1) : snow.toFixed(1)
+  } else if (rain !== 0) {
+    return rain.toFixed(1)
+  } else if (snow !== 0) {
+    return snow.toFixed(1)
+  } else {
+    return 0
+  }
+}
+
+function getNewState(
+  state: Hour[] | null,
+  value: keyof Hour,
+  index: number,
+  number: number
+) {
+  if (state === null) return 0
+  let count = 0
+
+  for (let i = 0; i < number; i++) {
+    if (index + i < state.length && state[index + i]) {
+      count += state[index + i][value] as number
+    }
+  }
+  // console.log(count)
+  return count
+}
+
+export function getArrayNumber(
+  state: Hour[] | null,
+  value: keyof Hour,
+  index: number,
+  number: number
+) {
+  if (state === null) return []
+  const array: number[] = []
+  for (let i = 0; i < number; i++) {
+    if (index + i < state.length && state[index + i]) {
+      array.push(state[index + i][value] as number)
+    }
+  }
+  // console.log(value, array)
+  return array
+}
+
 export function CrossingWeather({
   сrossingDate,
   statusShow,
@@ -77,23 +133,7 @@ export function CrossingWeather({
   //   (timestamp: number) => new Date(timestamp)
   // )
   ////////////////////////
-  function getNewState(
-    state: Hour[] | null,
-    value: keyof Hour,
-    index: number,
-    number: number
-  ) {
-    if (state === null) return 0
-    let count = 0
 
-    for (let i = 0; i < number; i++) {
-      if (index + i < state.length && state[index + i]) {
-        count += state[index + i][value] as number
-      }
-    }
-    // console.log(count)
-    return count
-  }
   ///////////////////////
   //   function getNewState(
   //     state: DataInfoHour[] | null,
@@ -193,22 +233,6 @@ export function CrossingWeather({
     return daytime
   }
   ///////////////
-  function getArrayNumber(
-    state: Hour[] | null,
-    value: keyof Hour,
-    index: number,
-    number: number
-  ) {
-    if (state === null) return []
-    const array: number[] = []
-    for (let i = 0; i < number; i++) {
-      if (index + i < state.length && state[index + i]) {
-        array.push(state[index + i][value] as number)
-      }
-    }
-    // console.log(value, array)
-    return array
-  }
 
   function getMostSevereWeather(weather_codes: string[]): string {
     if (weather_codes.length === 0) return "null"
@@ -320,25 +344,6 @@ export function CrossingWeather({
   // interface RandomObject {
   //   [key: string]: any
   // }
-  function weatheeWatherMM(
-    state: Hour[],
-    index: number,
-    number: number
-  ): number | string {
-    const rain = getNewState(state, "precip", index, number)
-
-    const snow = getNewState(state, "snow", index, number)
-
-    if (rain !== 0 && snow !== 0) {
-      return rain > snow ? rain.toFixed(1) : snow.toFixed(1)
-    } else if (rain !== 0) {
-      return rain.toFixed(1)
-    } else if (snow !== 0) {
-      return snow.toFixed(1)
-    } else {
-      return 0
-    }
-  }
 
   const weatherFromDay = (day: number) => {
     const dayData = days[day]
@@ -346,7 +351,6 @@ export function CrossingWeather({
     if (typeof dayData.datetime === "string" && Array.isArray(dayData.hours)) {
       return (
         <div className=" select-none">
-          <h2>Crossing Weather</h2>
           <div>
             {changeDate(dayData.datetime).getDate()}:
             {DAYS[changeDate(dayData.datetime).getDay()]}:
@@ -359,6 +363,13 @@ export function CrossingWeather({
 
                 const today = new Date()
                 const time = changeHours(dayData.datetime, hourInfo.datetime)
+
+                const rainProbably = Math.round(
+                  Math.max(
+                    ...getArrayNumber(dayData.hours, "precipprob", index, 3)
+                  )
+                )
+                const precipitation = weatheeWatherMM(dayData.hours, index, 3)
 
                 return (
                   <li
@@ -445,7 +456,7 @@ export function CrossingWeather({
                     </span>
                     <span className="flex gap-1">
                       <RainProbability />
-                      {Math.round(
+                      {/* {Math.round(
                         Math.max(
                           ...getArrayNumber(
                             dayData.hours,
@@ -454,11 +465,13 @@ export function CrossingWeather({
                             3
                           )
                         )
-                      )}
+                      )} */}
+                      {rainProbably}
                     </span>
                     <span className="flex items-center gap-1">
                       <Water />
-                      {weatheeWatherMM(dayData.hours, index, 3)}
+                      {/* {weatheeWatherMM(dayData.hours, index, 3)} */}
+                      {precipitation}
                       {/* {getNewState(dayData.hours, "precip", index, 3) === 0
                         ? 0
                         : getNewState(
@@ -496,6 +509,13 @@ export function CrossingWeather({
               if (index % 6 === 0) {
                 const today = new Date()
                 const time = changeHours(dayData.datetime, hourInfo.datetime)
+                const rainProbably = Math.round(
+                  Math.max(
+                    ...getArrayNumber(dayData.hours, "precipprob", index, 6)
+                  )
+                )
+                const precipitation = weatheeWatherMM(dayData.hours, index, 6)
+
                 return (
                   <li
                     key={index}
@@ -563,7 +583,7 @@ export function CrossingWeather({
                     </span>
                     <span className="flex gap-1">
                       <RainProbability />
-                      {Math.round(
+                      {/* {Math.round(
                         Math.max(
                           ...getArrayNumber(
                             dayData.hours,
@@ -572,20 +592,14 @@ export function CrossingWeather({
                             6
                           )
                         )
-                      )}
+                      )} */}
+                      {rainProbably}
                     </span>
 
                     <span className="flex items-center gap-1">
                       <Water />
-                      {weatheeWatherMM(dayData.hours, index, 6)}
-                      {/* {getNewState(dayData.hours, "precip", index, 6) === 0
-                        ? 0
-                        : getNewState(
-                            dayData.hours,
-                            "precip",
-                            index,
-                            6
-                          ).toFixed(1)} */}
+                      {/* {weatheeWatherMM(dayData.hours, index, 6)} */}
+                      {precipitation}
                     </span>
                   </li>
                 )
@@ -600,6 +614,7 @@ export function CrossingWeather({
   // const day = 24
   return (
     <div className=" ">
+      <h2 className="text-center">Crossing Weather</h2>
       <div className="border border-lime-400  flex flex-col gap-4  rounded-md">
         {days !== null && statusShow === "day" && weatherFromDay(today)}
         {days !== null && statusShow === "tomorrow" && weatherFromDay(tomorrow)}

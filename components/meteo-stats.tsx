@@ -3,12 +3,12 @@ import { DAYS, MONTHS } from "../constants/montsAndDayWeek"
 import clsx from "clsx"
 import { Water, Windy, WeatherIconMeteoSate } from "./iconSVG"
 
-type MeteoState = {
+export type MeteoState = {
   data: DataInfoHour[]
   meta: { generated: string; stations: string[] }
 }
 
-type DataInfoHour = {
+export type DataInfoHour = {
   coco: number
   dwpt: number
   prcp: number
@@ -23,6 +23,104 @@ type DataInfoHour = {
   wspd: number
 }
 
+function getNewState(
+  state: DataInfoHour[] | null,
+  value: keyof DataInfoHour,
+  index: number,
+  number: number
+) {
+  if (state === null) return 0
+
+  let count = 0
+  let currentIndex
+  for (let i = 0; i < number; i++) {
+    currentIndex = index + i
+
+    // Функция для поиска ближайшего ненулевого значения
+    const findClosestNonNullValue = (idx: number): number => {
+      let offset = 1
+
+      while (true) {
+        // Проверяем индекс слева
+        if (
+          idx - offset >= 0 &&
+          state[idx - offset] &&
+          state[idx - offset][value] !== null
+        ) {
+          return state[idx - offset][value] as number
+        }
+
+        // Проверяем индекс справа
+        if (
+          idx + offset < state.length &&
+          state[idx + offset] &&
+          state[idx + offset][value] !== null
+        ) {
+          return state[idx + offset][value] as number
+        }
+
+        // Если ни слева, ни справа не нашли ненулевое значение, увеличиваем смещение
+        offset++
+
+        // Если смещение становится слишком большим, возвращаем 0 или какое-то значение по умолчанию
+        if (idx - offset < 0 && idx + offset >= state.length) {
+          return 0 // или любое другое значение по умолчанию
+        }
+      }
+    }
+
+    if (currentIndex < state.length && state[currentIndex]) {
+      const valueAtCurrentIndex = state[currentIndex][value]
+      if (valueAtCurrentIndex === null) {
+        count += findClosestNonNullValue(currentIndex)
+      } else {
+        count += valueAtCurrentIndex as number
+      }
+    }
+  }
+
+  return count
+}
+
+export function getWeatherHourly(
+  state: DataInfoHour[] | null,
+  value: keyof DataInfoHour,
+  index: number,
+  number: number
+) {
+  if (state === null) return 999 // Если state равно null, возвращаем 999
+
+  let array = []
+  let count = 0
+
+  for (let i = 0; i < number; i++) {
+    if (state[index + i] && state[index + i][value] !== null) {
+      count += state[index + i][value] as number // Суммируем ненулевые значения
+    } else {
+      array.push(state[index + i] ? state[index + i][value] : null) // Добавляем null, если значение отсутствует
+    }
+  }
+
+  // Если все значения равны null, длина массива будет равна number
+  if (array.length === number) return 999
+
+  return count
+}
+
+function getDayTime(index: number) {
+  let daytime: string = ""
+  if (index % 24 === 0) {
+    daytime = "Ночь"
+  } else if (index % 24 === 6) {
+    daytime = "Утро"
+  } else if (index % 24 === 12) {
+    daytime = "День"
+  } else if (index % 24 === 18) {
+    daytime = "Вечер"
+  }
+  return daytime
+}
+
 export function MeteoStats({
   meteoState,
   statusShow,
@@ -30,7 +128,7 @@ export function MeteoStats({
   meteoState: MeteoState | null
   statusShow: string
 }) {
-  if (meteoState === null) return
+  if (meteoState === null) return null
 
   const { data }: { data: DataInfoHour[] } = meteoState
 
@@ -65,104 +163,6 @@ export function MeteoStats({
   //   // console.log(count)
   //   return count
   // }
-
-  function getNewState(
-    state: DataInfoHour[] | null,
-    value: keyof DataInfoHour,
-    index: number,
-    number: number
-  ) {
-    if (state === null) return 0
-
-    let count = 0
-    let currentIndex
-    for (let i = 0; i < number; i++) {
-      currentIndex = index + i
-
-      // Функция для поиска ближайшего ненулевого значения
-      const findClosestNonNullValue = (idx: number): number => {
-        let offset = 1
-
-        while (true) {
-          // Проверяем индекс слева
-          if (
-            idx - offset >= 0 &&
-            state[idx - offset] &&
-            state[idx - offset][value] !== null
-          ) {
-            return state[idx - offset][value] as number
-          }
-
-          // Проверяем индекс справа
-          if (
-            idx + offset < state.length &&
-            state[idx + offset] &&
-            state[idx + offset][value] !== null
-          ) {
-            return state[idx + offset][value] as number
-          }
-
-          // Если ни слева, ни справа не нашли ненулевое значение, увеличиваем смещение
-          offset++
-
-          // Если смещение становится слишком большим, возвращаем 0 или какое-то значение по умолчанию
-          if (idx - offset < 0 && idx + offset >= state.length) {
-            return 0 // или любое другое значение по умолчанию
-          }
-        }
-      }
-
-      if (currentIndex < state.length && state[currentIndex]) {
-        const valueAtCurrentIndex = state[currentIndex][value]
-        if (valueAtCurrentIndex === null) {
-          count += findClosestNonNullValue(currentIndex)
-        } else {
-          count += valueAtCurrentIndex as number
-        }
-      }
-    }
-
-    return count
-  }
-
-  function getWeatherHourly(
-    state: DataInfoHour[] | null,
-    value: keyof DataInfoHour,
-    index: number,
-    number: number
-  ) {
-    if (state === null) return 999 // Если state равно null, возвращаем 999
-
-    let array = []
-    let count = 0
-
-    for (let i = 0; i < number; i++) {
-      if (state[index + i] && state[index + i][value] !== null) {
-        count += state[index + i][value] as number // Суммируем ненулевые значения
-      } else {
-        array.push(state[index + i] ? state[index + i][value] : null) // Добавляем null, если значение отсутствует
-      }
-    }
-
-    // Если все значения равны null, длина массива будет равна number
-    if (array.length === number) return 999
-
-    return count
-  }
-
-  function getDayTime(index: number) {
-    let daytime: string = ""
-    if (index % 24 === 0) {
-      daytime = "Ночь"
-    } else if (index % 24 === 6) {
-      daytime = "Утро"
-    } else if (index % 24 === 12) {
-      daytime = "День"
-    } else if (index % 24 === 18) {
-      daytime = "Вечер"
-    }
-    return daytime
-  }
 
   // function getArrayNumber(
   //   state: DataInfoHour[] | null,
@@ -252,7 +252,6 @@ export function MeteoStats({
   // }
   const weatherFromDay = (day: DataInfoHour[]) => (
     <div className=" select-none">
-      <h2>Meteo-Stats</h2>
       <div>
         {changeDate(day[0].time).getDate()}:
         {DAYS[changeDate(day[0].time).getDay()]}:
@@ -444,6 +443,7 @@ export function MeteoStats({
   // const day = 24
   return (
     <div className=" ">
+      <h2 className="text-center">Meteo-Stats</h2>
       <div className="border border-lime-400  flex flex-col gap-4  rounded-md">
         {data !== null && statusShow === "day" && weatherFromDay(days[0])}
         {data !== null && statusShow === "tomorrow" && weatherFromDay(days[1])}
