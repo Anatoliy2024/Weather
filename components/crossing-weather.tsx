@@ -381,7 +381,7 @@ export function CrossingWeather({
                         today.getHours() === time.getHours() + 2) &&
                         changeDate(dayData.datetime).getDate() ===
                           today.getDate()
-                        ? "border border-lime-400 bg-lime-100"
+                        ? "bg-purple-200 text-black"
                         : ""
                     )}
                   >
@@ -529,7 +529,7 @@ export function CrossingWeather({
                         today.getHours() === time.getHours() + 5) &&
                         changeDate(dayData.datetime).getDate() ===
                           today.getDate()
-                        ? "border border-lime-400 bg-lime-100"
+                        ? "bg-purple-200 text-black"
                         : ""
                     )}
                   >
@@ -615,7 +615,7 @@ export function CrossingWeather({
   return (
     <div className=" ">
       <h2 className="text-center">Crossing Weather</h2>
-      <div className="border border-lime-400  flex flex-col gap-4  rounded-md">
+      <div className="border border-lime-400  flex flex-col gap-4  rounded-md bg-violet-50  text-pink-800">
         {days !== null && statusShow === "day" && weatherFromDay(today)}
         {days !== null && statusShow === "tomorrow" && weatherFromDay(tomorrow)}
         {days !== null && statusShow === "3day" && (
@@ -638,7 +638,7 @@ export function CrossingWeather({
                   const weekend =
                     DAYS[someDay.getDay()] === "Сб" ||
                     DAYS[someDay.getDay()] === "Вс"
-                      ? "text-red-500"
+                      ? "text-sky-400"
                       : ""
                   return (
                     <li
@@ -646,7 +646,7 @@ export function CrossingWeather({
                       className={clsx(
                         "flex flex-col w-[55px] justify-center items-center  rounded-md ",
                         today.getDate() === someDay.getDate()
-                          ? "border border-violet-700 bg-lime-100/50"
+                          ? "bg-purple-200 text-black"
                           : ""
                       )}
                     >

@@ -123,11 +123,11 @@ function App() {
   }
 
   const borderButton = (state: string) =>
-    statusShow === state ? "bg-lime-400 " : ""
+    statusShow === state ? "bg-violet-950" : ""
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center">
-      <div className="flex flex-col items-center gap-2 max-w-screen-md w-full px-4 pb-8">
+    <div className="min-h-screen w-full flex items-center justify-center bg-violet-950/80">
+      <div className="flex flex-col items-center gap-2 max-w-screen-md w-full px-4 py-8 text-pink-400">
         <div className="flex justify-center  pb-6">Погода В городе</div>
         <div className=" flex gap-3 flex-col">
           <div className="flex gap-4">
@@ -138,7 +138,7 @@ function App() {
               onChange={(e) => setCityValue(e.target.value)}
             />
             <button
-              className="p-1 rounded bg-lime-400"
+              className="p-1 rounded bg-violet-950"
               onClick={() => {
                 handleFetchWeather(cityValue)
 

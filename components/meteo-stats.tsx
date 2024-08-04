@@ -273,7 +273,7 @@ export function MeteoStats({
                     today.getHours() === time.getHours() + 1 ||
                     today.getHours() === time.getHours() + 2) &&
                     changeDate(day[0].time).getDate() === today.getDate()
-                    ? "border border-lime-400 bg-lime-100"
+                    ? "bg-purple-200 text-black"
                     : ""
                 )}
               >
@@ -385,7 +385,7 @@ export function MeteoStats({
                     today.getHours() === time.getHours() + 4 ||
                     today.getHours() === time.getHours() + 5) &&
                     changeDate(day[0].time).getDate() === today.getDate()
-                    ? "border border-lime-400 bg-lime-100"
+                    ? "bg-purple-200 text-black"
                     : ""
                 )}
               >
@@ -444,7 +444,7 @@ export function MeteoStats({
   return (
     <div className=" ">
       <h2 className="text-center">Meteo-Stats</h2>
-      <div className="border border-lime-400  flex flex-col gap-4  rounded-md">
+      <div className="border border-lime-400  flex flex-col gap-4  rounded-md bg-violet-50 text-pink-800">
         {data !== null && statusShow === "day" && weatherFromDay(days[0])}
         {data !== null && statusShow === "tomorrow" && weatherFromDay(days[1])}
         {data !== null && statusShow === "3day" && (

@@ -9,7 +9,7 @@ type UiButtonProps = {
 
 export function UiButton({ onClick, className, children }: UiButtonProps) {
   return (
-    <button onClick={onClick} className={clsx("p-1 rounded", className)}>
+    <button onClick={onClick} className={clsx("p-1 rounded ", className)}>
       {children}
     </button>
   )

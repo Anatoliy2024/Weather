@@ -10,7 +10,11 @@ type Condition = {
 
 type Day = Record<string, number | Condition>
 
-type Hour = Record<string, number | string | Condition>
+// type Hour = Record<string, number | string | Condition>
+type Hour = {
+  time: string
+  [key: string]: number | string | Condition
+}
 
 type Location = Record<string, number | string>
 
@@ -116,7 +120,7 @@ export function WeatherAPI({
     // times: Date[],
     arrayDays: ForecastValue[]
   ) => (
-    <div className=" select-none">
+    <div className=" select-none ">
       <div>
         {changeDate(arrayDays[day].date).getDate()}:
         {DAYS[changeDate(arrayDays[day].date).getDay()]}:
@@ -150,7 +154,7 @@ export function WeatherAPI({
                       today.getHours() === time.getHours() + 2) &&
                       changeDate(arrayDays[day].date).getDate() ===
                         today.getDate()
-                      ? "border border-lime-400 bg-lime-100"
+                      ? " bg-purple-200 text-black"
                       : ""
                   )}
                 >
@@ -279,7 +283,7 @@ export function WeatherAPI({
                 <li
                   key={index}
                   className={clsx(
-                    "flex flex-col max-w-[48px]",
+                    "flex flex-col max-w-[48px] rounded",
                     (today.getHours() === change.getHours() ||
                       today.getHours() === change.getHours() + 1 ||
                       today.getHours() === change.getHours() + 2 ||
@@ -287,7 +291,7 @@ export function WeatherAPI({
                       today.getHours() === change.getHours() + 4 ||
                       today.getHours() === change.getHours() + 5) &&
                       change.getDate() === today.getDate()
-                      ? "border border-lime-400 bg-lime-100"
+                      ? "bg-purple-200 text-black"
                       : ""
                   )}
                 >
@@ -342,7 +346,7 @@ export function WeatherAPI({
   return (
     <div className=" ">
       <h2 className="text-center">WeatherAPI</h2>
-      <div className="border border-lime-400  flex flex-col gap-4  rounded-md">
+      <div className="border border-lime-400  flex flex-col gap-4  rounded-md bg-violet-50 text-pink-800">
         {arrayDays !== null &&
           statusShow === "day" &&
           weatherFromDay(today, arrayDays)}
@@ -379,7 +383,7 @@ export function WeatherAPI({
                     const weekend =
                       DAYS[someDate.getDay()] === "Сб" ||
                       DAYS[someDate.getDay()] === "Вс"
-                        ? "text-red-500"
+                        ? "text-sky-400"
                         : ""
                     return (
                       <li
@@ -387,7 +391,7 @@ export function WeatherAPI({
                         className={clsx(
                           "flex flex-col w-[55px] justify-center items-center  rounded-md ",
                           today.getDate() === someDate.getDate()
-                            ? "border border-violet-700 bg-lime-100/50"
+                            ? "bg-purple-200 text-black"
                             : ""
                         )}
                       >
