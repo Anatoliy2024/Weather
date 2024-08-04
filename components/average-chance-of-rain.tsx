@@ -370,6 +370,40 @@ export const AverageChanceOfRain = ({
       getCrossingDate(сrossingDate, setRainProbably)
     }
 
+    // const today = {
+    //   time: rainProbably.openMeteo.today.time,
+    //   rainProbably: [
+    //     rainProbably.openMeteo.today.rainProbably,
+    //     rainProbably.stateWeatherApi.today.rainProbably,
+    //     rainProbably.meteoState.today.rainProbably,
+    //     rainProbably.crossingDate.today.rainProbably,
+    //   ],
+    //   precipitation: [
+    //     rainProbably.openMeteo.today.precipitation,
+    //     rainProbably.stateWeatherApi.today.precipitation,
+    //     rainProbably.meteoState.today.precipitation,
+    //     rainProbably.crossingDate.today.precipitation,
+    //   ],
+    // }
+
+    // const tomorrow = {
+    //   time: rainProbably.openMeteo.tomorrow.time,
+    //   rainProbably: [
+    //     rainProbably.openMeteo.tomorrow.rainProbably,
+    //     rainProbably.stateWeatherApi.tomorrow.rainProbably,
+    //     rainProbably.meteoState.tomorrow.rainProbably,
+    //     rainProbably.crossingDate.tomorrow.rainProbably,
+    //   ],
+    //   precipitation: [
+    //     rainProbably.openMeteo.tomorrow.precipitation,
+    //     rainProbably.stateWeatherApi.tomorrow.precipitation,
+    //     rainProbably.meteoState.tomorrow.precipitation,
+    //     rainProbably.crossingDate.tomorrow.precipitation,
+    //   ],
+    // }
+  }, [state, stateDaily, stateWeatherApi, meteoState, сrossingDate]) // Зависимости useEffect
+
+  useEffect(() => {
     const dayAverage = (day: "today" | "tomorrow") => {
       return {
         time: [...rainProbably.openMeteo[day].time],
@@ -530,40 +564,7 @@ export const AverageChanceOfRain = ({
       },
       week: weekAverage(),
     })
-
-    // const today = {
-    //   time: rainProbably.openMeteo.today.time,
-    //   rainProbably: [
-    //     rainProbably.openMeteo.today.rainProbably,
-    //     rainProbably.stateWeatherApi.today.rainProbably,
-    //     rainProbably.meteoState.today.rainProbably,
-    //     rainProbably.crossingDate.today.rainProbably,
-    //   ],
-    //   precipitation: [
-    //     rainProbably.openMeteo.today.precipitation,
-    //     rainProbably.stateWeatherApi.today.precipitation,
-    //     rainProbably.meteoState.today.precipitation,
-    //     rainProbably.crossingDate.today.precipitation,
-    //   ],
-    // }
-
-    // const tomorrow = {
-    //   time: rainProbably.openMeteo.tomorrow.time,
-    //   rainProbably: [
-    //     rainProbably.openMeteo.tomorrow.rainProbably,
-    //     rainProbably.stateWeatherApi.tomorrow.rainProbably,
-    //     rainProbably.meteoState.tomorrow.rainProbably,
-    //     rainProbably.crossingDate.tomorrow.rainProbably,
-    //   ],
-    //   precipitation: [
-    //     rainProbably.openMeteo.tomorrow.precipitation,
-    //     rainProbably.stateWeatherApi.tomorrow.precipitation,
-    //     rainProbably.meteoState.tomorrow.precipitation,
-    //     rainProbably.crossingDate.tomorrow.precipitation,
-    //   ],
-    // }
-  }, [state, stateDaily, stateWeatherApi, meteoState, сrossingDate]) // Зависимости useEffect
-
+  }, [rainProbably])
   // console.log("times", times)
   // console.log("state", state)
   // console.log("stateDaily", stateDaily)
