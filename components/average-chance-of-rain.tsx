@@ -520,7 +520,7 @@ export const AverageChanceOfRain = ({
     // threeDayAverage("nextTomorrow")
     // weekAverage()
 
-    const allAverege = {
+    setAllAvarage({
       today: dayAverage("today"),
       tomorrow: dayAverage("tomorrow"),
       "3day": {
@@ -529,9 +529,7 @@ export const AverageChanceOfRain = ({
         nextTomorrow: threeDayAverage("nextTomorrow"),
       },
       week: weekAverage(),
-    }
-
-    setAllAvarage(allAverege)
+    })
 
     // const today = {
     //   time: rainProbably.openMeteo.today.time,
