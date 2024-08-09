@@ -132,7 +132,7 @@ function App() {
         <div className=" flex gap-3 flex-col">
           <div className="flex gap-4">
             <input
-              className="border border-lime-400 rounded-md"
+              className="pl-2 rounded-md"
               type="text"
               value={cityValue}
               onChange={(e) => setCityValue(e.target.value)}

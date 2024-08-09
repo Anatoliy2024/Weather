@@ -375,7 +375,7 @@ export function CrossingWeather({
                   <li
                     key={index}
                     className={clsx(
-                      "flex flex-col w-[55px] justify-center items-center  rounded-md ",
+                      "flex flex-col w-[60px] justify-center items-center  rounded-md ",
                       (today.getHours() === time.getHours() ||
                         today.getHours() === time.getHours() + 1 ||
                         today.getHours() === time.getHours() + 2) &&
@@ -520,7 +520,7 @@ export function CrossingWeather({
                   <li
                     key={index}
                     className={clsx(
-                      "flex flex-col rounded-md ",
+                      "flex flex-col rounded-md items-center w-[60px] ",
                       (today.getHours() === time.getHours() ||
                         today.getHours() === time.getHours() + 1 ||
                         today.getHours() === time.getHours() + 2 ||
@@ -540,7 +540,7 @@ export function CrossingWeather({
                       )}
                     /> */}
                     {/* <div>{hourInfo.icon}</div> */}
-                    <div className="w-[30px] h-[30px] flex justify-center items-center self-center">
+                    <div className="w-[30px] h-[30px] flex items-center ">
                       <WeatherIconCrossing
                         weather_code={getArrayWeather(dayData.hours, index, 6)}
                       />
@@ -615,7 +615,7 @@ export function CrossingWeather({
   return (
     <div className=" ">
       <h2 className="text-center">Crossing Weather</h2>
-      <div className="border border-lime-400  flex flex-col gap-4  rounded-md bg-violet-50  text-pink-800">
+      <div className="  flex flex-col gap-4  rounded-md bg-violet-50  text-pink-800">
         {days !== null && statusShow === "day" && weatherFromDay(today)}
         {days !== null && statusShow === "tomorrow" && weatherFromDay(tomorrow)}
         {days !== null && statusShow === "3day" && (
@@ -644,7 +644,7 @@ export function CrossingWeather({
                     <li
                       key={index}
                       className={clsx(
-                        "flex flex-col w-[55px] justify-center items-center  rounded-md ",
+                        "flex flex-col w-[60px] justify-center items-center  rounded-md  ",
                         today.getDate() === someDay.getDate()
                           ? "bg-purple-200 text-black"
                           : ""

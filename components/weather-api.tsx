@@ -148,7 +148,7 @@ export function WeatherAPI({
                 <li
                   key={index}
                   className={clsx(
-                    "flex flex-col w-[55px] justify-center items-center  rounded-md ",
+                    "flex flex-col w-[60px] justify-center items-center  rounded-md ",
                     (today.getHours() === time.getHours() ||
                       today.getHours() === time.getHours() + 1 ||
                       today.getHours() === time.getHours() + 2) &&
@@ -283,7 +283,7 @@ export function WeatherAPI({
                 <li
                   key={index}
                   className={clsx(
-                    "flex flex-col max-w-[48px] rounded",
+                    "flex flex-col w-[60px] rounded items-center",
                     (today.getHours() === change.getHours() ||
                       today.getHours() === change.getHours() + 1 ||
                       today.getHours() === change.getHours() + 2 ||
@@ -346,7 +346,7 @@ export function WeatherAPI({
   return (
     <div className=" ">
       <h2 className="text-center">WeatherAPI</h2>
-      <div className="border border-lime-400  flex flex-col gap-4  rounded-md bg-violet-50 text-pink-800">
+      <div className=" flex flex-col gap-4  rounded-md bg-violet-50 text-pink-800">
         {arrayDays !== null &&
           statusShow === "day" &&
           weatherFromDay(today, arrayDays)}
@@ -389,7 +389,7 @@ export function WeatherAPI({
                       <li
                         key={index}
                         className={clsx(
-                          "flex flex-col w-[55px] justify-center items-center  rounded-md ",
+                          "flex flex-col w-[60px] justify-center items-center  rounded-md ",
                           today.getDate() === someDate.getDate()
                             ? "bg-purple-200 text-black"
                             : ""

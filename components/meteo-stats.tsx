@@ -268,7 +268,7 @@ export function MeteoStats({
               <li
                 key={index}
                 className={clsx(
-                  "flex flex-col w-[55px] justify-center items-center  rounded-md ",
+                  "flex flex-col w-[60px] justify-center items-center  rounded-md ",
                   (today.getHours() === time.getHours() ||
                     today.getHours() === time.getHours() + 1 ||
                     today.getHours() === time.getHours() + 2) &&
@@ -377,7 +377,7 @@ export function MeteoStats({
               <li
                 key={index}
                 className={clsx(
-                  "flex flex-col rounded-md ",
+                  "flex flex-col rounded-md items-center w-[60px]",
                   (today.getHours() === time.getHours() ||
                     today.getHours() === time.getHours() + 1 ||
                     today.getHours() === time.getHours() + 2 ||
@@ -444,7 +444,7 @@ export function MeteoStats({
   return (
     <div className=" ">
       <h2 className="text-center">Meteo-Stats</h2>
-      <div className="border border-lime-400  flex flex-col gap-4  rounded-md bg-violet-50 text-pink-800">
+      <div className=" flex flex-col gap-4  rounded-md bg-violet-50 text-pink-800">
         {data !== null && statusShow === "day" && weatherFromDay(days[0])}
         {data !== null && statusShow === "tomorrow" && weatherFromDay(days[1])}
         {data !== null && statusShow === "3day" && (
