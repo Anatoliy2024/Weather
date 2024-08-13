@@ -80,57 +80,23 @@ export const AverageChanceOfRain = ({
   сrossingDate,
   statusShow,
 }: AllValye) => {
+  const createWeatherTemplate = () => ({
+    time: [],
+    icon: [],
+    temp: [],
+    windy: [],
+    rainProbably: [],
+    precipitation: [],
+  })
   const initialWeatherData = {
-    today: {
-      time: [],
-      icon: [],
-      temp: [],
-      windy: [],
-      rainProbably: [],
-      precipitation: [],
-    },
-    tomorrow: {
-      time: [],
-      icon: [],
-      temp: [],
-      windy: [],
-      rainProbably: [],
-      precipitation: [],
-    },
+    today: createWeatherTemplate(),
+    tomorrow: createWeatherTemplate(),
     "3day": {
-      today: {
-        time: [],
-        icon: [],
-        temp: [],
-        windy: [],
-        rainProbably: [],
-        precipitation: [],
-      },
-      tomorrow: {
-        time: [],
-        icon: [],
-        temp: [],
-        windy: [],
-        rainProbably: [],
-        precipitation: [],
-      },
-      nextTomorrow: {
-        time: [],
-        icon: [],
-        temp: [],
-        windy: [],
-        rainProbably: [],
-        precipitation: [],
-      },
+      today: createWeatherTemplate(),
+      tomorrow: createWeatherTemplate(),
+      nextTomorrow: createWeatherTemplate(),
     },
-    week: {
-      time: [],
-      icon: [],
-      temp: [],
-      windy: [],
-      rainProbably: [],
-      precipitation: [],
-    },
+    week: createWeatherTemplate(),
   }
 
   const [rainProbably, setRainProbably] = useState<InitialWeatherData>({
