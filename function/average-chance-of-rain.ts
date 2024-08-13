@@ -75,6 +75,7 @@ export function getOpenMeteo(
             const icon = Math.max(
               ...getArrayNumber(state, "weather_code", index, number)
             )
+
             const temp = Math.round(
               getNewState(state, "temperature_2m", index, number) / number
             )
@@ -145,6 +146,7 @@ export function getOpenMeteo(
             const icon = Math.max(
               ...getArrayNumber(state, "weather_code", index, number)
             )
+
             const temp = Math.round(
               getNewState(state, "temperature_2m", index, number) / number
             )

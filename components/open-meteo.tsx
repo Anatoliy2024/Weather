@@ -150,9 +150,8 @@ export function OpenMeteo({
                 Math.max(...getArrayNumber(state, "wind_speed_10m", index, 3))
               )
               return (
-                <SwiperSlide style={{ width: "65px" }}>
+                <SwiperSlide key={index} style={{ width: "65px" }}>
                   <li
-                    key={index}
                     className={clsx(
                       "flex flex-col w-[65px] justify-center items-center  rounded-md ",
                       (today.getHours() === time.getHours() ||
@@ -368,9 +367,8 @@ export function OpenMeteo({
                       : ""
 
                   return (
-                    <SwiperSlide style={{ width: "60px" }}>
+                    <SwiperSlide key={index} style={{ width: "60px" }}>
                       <li
-                        key={index}
                         className={clsx(
                           "flex flex-col w-[60px] justify-center items-center  rounded-md ",
                           today.getDate() === time.getDate()

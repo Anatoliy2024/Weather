@@ -81,14 +81,56 @@ export const AverageChanceOfRain = ({
   statusShow,
 }: AllValye) => {
   const initialWeatherData = {
-    today: { time: [], rainProbably: [], precipitation: [] },
-    tomorrow: { time: [], rainProbably: [], precipitation: [] },
-    "3day": {
-      today: { time: [], rainProbably: [], precipitation: [] },
-      tomorrow: { time: [], rainProbably: [], precipitation: [] },
-      nextTomorrow: { time: [], rainProbably: [], precipitation: [] },
+    today: {
+      time: [],
+      icon: [],
+      temp: [],
+      windy: [],
+      rainProbably: [],
+      precipitation: [],
     },
-    week: { time: [], rainProbably: [], precipitation: [] },
+    tomorrow: {
+      time: [],
+      icon: [],
+      temp: [],
+      windy: [],
+      rainProbably: [],
+      precipitation: [],
+    },
+    "3day": {
+      today: {
+        time: [],
+        icon: [],
+        temp: [],
+        windy: [],
+        rainProbably: [],
+        precipitation: [],
+      },
+      tomorrow: {
+        time: [],
+        icon: [],
+        temp: [],
+        windy: [],
+        rainProbably: [],
+        precipitation: [],
+      },
+      nextTomorrow: {
+        time: [],
+        icon: [],
+        temp: [],
+        windy: [],
+        rainProbably: [],
+        precipitation: [],
+      },
+    },
+    week: {
+      time: [],
+      icon: [],
+      temp: [],
+      windy: [],
+      rainProbably: [],
+      precipitation: [],
+    },
   }
 
   const [rainProbably, setRainProbably] = useState<InitialWeatherData>({
