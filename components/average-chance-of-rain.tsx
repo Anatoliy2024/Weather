@@ -28,6 +28,11 @@ type AllValye = {
 
 interface WeatherData {
   time: (string | Date | null)[]
+  icon: (string | number | null)[]
+  temp: (number | null)[]
+  tempMax?: (number | null)[]
+  tempMin?: (number | null)[]
+  windy: (number | null)[]
   rainProbably: (number | null)[]
   precipitation: (number | null)[]
 }
@@ -281,7 +286,7 @@ export const AverageChanceOfRain = ({
                 <li
                   key={index}
                   className={clsx(
-                    "flex flex-col  justify-center items-center  rounded-md w-[60px]",
+                    "flex flex-col  justify-center items-center  rounded-md min-w-[60px]",
                     (today.getHours() === hourInfo.getHours() ||
                       today.getHours() === hourInfo.getHours() + 1 ||
                       today.getHours() === hourInfo.getHours() + 2) &&
@@ -386,7 +391,7 @@ export const AverageChanceOfRain = ({
   }
 
   return (
-    <div>
+    <div className="max-w-full">
       <h2 className="text-center">Среднее занчение осадков</h2>
       <div className="  flex flex-col gap-4  rounded-md bg-violet-50 text-pink-800">
         {statusShow === "day" && weatherFromDay(allAvarage.today)}

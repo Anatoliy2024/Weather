@@ -126,13 +126,13 @@ function App() {
     statusShow === state ? "bg-violet-950" : ""
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-violet-950/80">
-      <div className="flex flex-col items-center gap-2 max-w-screen-md w-full px-4 py-8 text-pink-400">
+    <div className="min-h-screen  flex items-center justify-center bg-violet-950/80">
+      <div className="flex flex-col items-center gap-2 py-8  text-pink-400 w-full">
         <div className="flex justify-center  pb-6">Погода В городе</div>
         <div className=" flex gap-3 flex-col">
-          <div className="flex gap-4">
+          <div className="flex gap-3">
             <input
-              className="pl-2 rounded-md"
+              className="pl-2 rounded-md w-52"
               type="text"
               value={cityValue}
               onChange={(e) => setCityValue(e.target.value)}
@@ -150,7 +150,7 @@ function App() {
               {loading ? "Загрузка..." : "Кликни"}
             </button>
           </div>
-          <div className="flex gap-4">
+          <div className="flex gap-2">
             <UiButton
               className={clsx(borderButton("day"))}
               onClick={() => setStatusShow("day")}

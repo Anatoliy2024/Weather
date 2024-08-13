@@ -8,5 +8,9 @@ html {
   margin: 0;
 }
 #root {
-  font-size: 20px;
+  font-size: 22px;
 }
+/* body::-webkit-scrollbar {
+  width: 0px;
+  height: 0px; 
+} */

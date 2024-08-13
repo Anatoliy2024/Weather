@@ -344,7 +344,7 @@ export function WeatherAPI({
 
   // const day = 24
   return (
-    <div className=" ">
+    <div className="max-w-full ">
       <h2 className="text-center">WeatherAPI</h2>
       <div className=" flex flex-col gap-4  rounded-md bg-violet-50 text-pink-800">
         {arrayDays !== null &&

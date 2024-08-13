@@ -1,8 +1,8 @@
 export function Water() {
   return (
     <svg
-      width="20px"
-      height="20px"
+      width="27px"
+      height="27px"
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -28,8 +28,8 @@ export function Windy() {
       xmlns="http://www.w3.org/2000/svg"
       x="0px"
       y="0px"
-      width="20px"
-      height="20px"
+      width="27px"
+      height="27px"
       viewBox="25 18 50 50"
     >
       <path
@@ -52,8 +52,8 @@ export function RainProbability() {
   return (
     <svg
       id="Layer_1"
-      width="25px"
-      height="25px"
+      width="30px"
+      height="30px"
       viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"
     >
@@ -62,8 +62,8 @@ export function RainProbability() {
   )
 }
 
-const WIDTH = "25px"
-const HEIGHT = "25px"
+const WIDTH = "30px"
+const HEIGHT = "30px"
 const VIEW_BOX = "25 25 50 60"
 
 function Icon0123() {

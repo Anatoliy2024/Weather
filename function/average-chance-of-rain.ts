@@ -71,6 +71,19 @@ export function getOpenMeteo(
               index,
               number
             ).toFixed(1)
+
+            const icon = Math.max(
+              ...getArrayNumber(state, "weather_code", index, number)
+            )
+            const temp = Math.round(
+              getNewState(state, "temperature_2m", index, number) / number
+            )
+            const windy = Math.round(
+              Math.max(
+                ...getArrayNumber(state, "wind_speed_10m", index, number)
+              )
+            )
+
             // console.log(rainProbably, precipitation)
             setRainProbably((prev) => ({
               ...prev,
@@ -79,6 +92,9 @@ export function getOpenMeteo(
                 [stateKey]: {
                   ...prev.openMeteo[stateKey],
                   time: [...prev.openMeteo[stateKey].time, time],
+                  icon: [...prev.openMeteo[stateKey].icon, icon],
+                  temp: [...prev.openMeteo[stateKey].temp, temp],
+                  windy: [...prev.openMeteo[stateKey].windy, windy],
                   rainProbably: [
                     ...prev.openMeteo[stateKey].rainProbably,
                     rainProbably,
@@ -125,6 +141,19 @@ export function getOpenMeteo(
               index,
               number
             ).toFixed(1)
+
+            const icon = Math.max(
+              ...getArrayNumber(state, "weather_code", index, number)
+            )
+            const temp = Math.round(
+              getNewState(state, "temperature_2m", index, number) / number
+            )
+            const windy = Math.round(
+              Math.max(
+                ...getArrayNumber(state, "wind_speed_10m", index, number)
+              )
+            )
+
             // console.log(rainProbably, precipitation)
             setRainProbably((prev) => ({
               ...prev,
@@ -135,6 +164,9 @@ export function getOpenMeteo(
                   [stateKey]: {
                     ...prev.openMeteo["3day"][stateKey],
                     time: [...prev.openMeteo["3day"][stateKey].time, time],
+                    icon: [...prev.openMeteo["3day"][stateKey].icon, icon],
+                    temp: [...prev.openMeteo["3day"][stateKey].temp, temp],
+                    windy: [...prev.openMeteo["3day"][stateKey].windy, windy],
                     rainProbably: [
                       ...prev.openMeteo["3day"][stateKey].rainProbably,
                       rainProbably,
@@ -157,6 +189,10 @@ export function getOpenMeteo(
         week: {
           ...prev.openMeteo.week,
           time: stateDaily.time.map((timestamp) => new Date(timestamp)),
+          icon: [...stateDaily.weather_code],
+          tempMax: [...stateDaily.temperature_2m_max],
+          tempMin: [...stateDaily.temperature_2m_min],
+          windy: [...stateDaily.wind_speed_10m_max],
           rainProbably: [...stateDaily.precipitation_probability_max],
           precipitation: [...stateDaily.precipitation_sum],
         },

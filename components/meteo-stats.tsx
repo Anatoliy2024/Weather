@@ -268,7 +268,7 @@ export function MeteoStats({
               <li
                 key={index}
                 className={clsx(
-                  "flex flex-col w-[60px] justify-center items-center  rounded-md ",
+                  "flex flex-col min-w-[60px] justify-center items-center  rounded-md ",
                   (today.getHours() === time.getHours() ||
                     today.getHours() === time.getHours() + 1 ||
                     today.getHours() === time.getHours() + 2) &&
@@ -442,7 +442,7 @@ export function MeteoStats({
 
   // const day = 24
   return (
-    <div className=" ">
+    <div className="max-w-full ">
       <h2 className="text-center">Meteo-Stats</h2>
       <div className=" flex flex-col gap-4  rounded-md bg-violet-50 text-pink-800">
         {data !== null && statusShow === "day" && weatherFromDay(days[0])}
