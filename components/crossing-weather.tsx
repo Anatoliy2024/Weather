@@ -79,7 +79,7 @@ export function weatheeWatherMM(
   }
 }
 
-function getNewState(
+export function getNewState(
   state: Hour[] | null,
   value: keyof Hour,
   index: number,
@@ -112,6 +112,39 @@ export function getArrayNumber(
   }
   // console.log(value, array)
   return array
+}
+
+function getMostSevereWeather(weather_codes: string[]): string {
+  if (weather_codes.length === 0) return "null"
+
+  // Найдите состояние с наивысшим приоритетом
+  const highestPriority = Math.max(
+    ...weather_codes.map((code) => weatherPriority[code] || 0)
+  )
+  const mostSevereWeather = weather_codes.find(
+    (code) => weatherPriority[code] === highestPriority
+  )
+
+  return mostSevereWeather as string
+}
+
+export function getArrayWeather(
+  state: Hour[] | null,
+  index: number,
+  number: number
+) {
+  if (state === null) return "null"
+  const array: string[] = []
+  for (let i = 0; i < number; i++) {
+    if (index + i < state.length && state[index + i]) {
+      array.push(state[index + i].icon as string)
+    }
+  }
+  const weatherIconString = getMostSevereWeather(array)
+  // console.log(array)
+  // console.log(weatherIconString)
+  return weatherIconString
+  // console.log(value, array)
 }
 
 export function CrossingWeather({
@@ -233,39 +266,6 @@ export function CrossingWeather({
     return daytime
   }
   ///////////////
-
-  function getMostSevereWeather(weather_codes: string[]): string {
-    if (weather_codes.length === 0) return "null"
-
-    // Найдите состояние с наивысшим приоритетом
-    const highestPriority = Math.max(
-      ...weather_codes.map((code) => weatherPriority[code] || 0)
-    )
-    const mostSevereWeather = weather_codes.find(
-      (code) => weatherPriority[code] === highestPriority
-    )
-
-    return mostSevereWeather as string
-  }
-
-  function getArrayWeather(
-    state: Hour[] | null,
-    index: number,
-    number: number
-  ) {
-    if (state === null) return "null"
-    const array: string[] = []
-    for (let i = 0; i < number; i++) {
-      if (index + i < state.length && state[index + i]) {
-        array.push(state[index + i].icon as string)
-      }
-    }
-    const weatherIconString = getMostSevereWeather(array)
-    // console.log(array)
-    // console.log(weatherIconString)
-    return weatherIconString
-    // console.log(value, array)
-  }
 
   ///////////////////
   //   function getArrayNumber(

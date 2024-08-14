@@ -26,12 +26,19 @@ type AllValye = {
   сrossingDate: CrossingWeather | null
 }
 
-interface WeatherData {
+export interface WeatherData {
   time: (string | Date | null)[]
   icon: (string | number | null)[]
   temp: (number | null)[]
-  tempMax?: (number | null)[]
-  tempMin?: (number | null)[]
+  windy: (number | null)[]
+  rainProbably: (number | null)[]
+  precipitation: (number | null)[]
+}
+export interface WeatherDataWeek {
+  time: (string | Date | null)[]
+  icon: (string | number | null)[]
+  tempMax: (number | null)[]
+  tempMin: (number | null)[]
   windy: (number | null)[]
   rainProbably: (number | null)[]
   precipitation: (number | null)[]
@@ -47,7 +54,7 @@ export interface WeatherState {
   today: WeatherData
   tomorrow: WeatherData
   "3day": ThreeDayForecast
-  week: WeatherData
+  week: WeatherDataWeek
 }
 
 export interface InitialWeatherData {
@@ -96,7 +103,15 @@ export const AverageChanceOfRain = ({
       tomorrow: createWeatherTemplate(),
       nextTomorrow: createWeatherTemplate(),
     },
-    week: createWeatherTemplate(),
+    week: {
+      time: [],
+      icon: [],
+      tempMax: [],
+      tempMin: [],
+      windy: [],
+      rainProbably: [],
+      precipitation: [],
+    },
   }
 
   const [rainProbably, setRainProbably] = useState<InitialWeatherData>({

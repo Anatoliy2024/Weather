@@ -23,7 +23,7 @@ export type DataInfoHour = {
   wspd: number
 }
 
-function getNewState(
+export function getNewState(
   state: DataInfoHour[] | null,
   value: keyof DataInfoHour,
   index: number,
@@ -121,6 +121,68 @@ function getDayTime(index: number) {
   return daytime
 }
 
+export function getArrayNumber(
+  state: DataInfoHour[] | null,
+  value: keyof DataInfoHour,
+  index: number,
+  number: number
+): number[] {
+  if (state === null) return []
+
+  const array: number[] = []
+
+  // Функция для поиска ближайшего ненулевого значения при null
+  const findClosestNonNullValue = (idx: number): number => {
+    let offset = 1
+
+    while (true) {
+      // Проверяем индекс слева
+      if (
+        idx - offset >= 0 &&
+        state[idx - offset] &&
+        state[idx - offset][value] !== null &&
+        state[idx - offset][value] !== undefined
+      ) {
+        return state[idx - offset][value] as number
+      }
+
+      // Проверяем индекс справа
+      if (
+        idx + offset < state.length &&
+        state[idx + offset] &&
+        state[idx + offset][value] !== null &&
+        state[idx + offset][value] !== undefined
+      ) {
+        return state[idx + offset][value] as number
+      }
+
+      // Если смещение становится слишком большим, возвращаем 0 или значение по умолчанию
+      if (idx - offset < 0 && idx + offset >= state.length) {
+        return 0 // Возвращаем 0, если не нашли ненулевое значение
+      }
+
+      offset++
+    }
+  }
+
+  for (let i = 0; i < number; i++) {
+    const currentIndex = index + i
+    if (currentIndex < state.length && state[currentIndex]) {
+      const valueAtIndex = state[currentIndex][value]
+      if (valueAtIndex === null) {
+        // Если текущее значение null, ищем ближайшее ненулевое значение
+        array.push(findClosestNonNullValue(currentIndex))
+      } else {
+        array.push(valueAtIndex as number)
+      }
+    } else {
+      array.push(0) // Если состояние отсутствует, добавляем 0
+    }
+  }
+
+  return array
+}
+
 export function MeteoStats({
   meteoState,
   statusShow,
@@ -180,68 +242,6 @@ export function MeteoStats({
   //   // console.log(value, array)
   //   return array
   // }
-
-  function getArrayNumber(
-    state: DataInfoHour[] | null,
-    value: keyof DataInfoHour,
-    index: number,
-    number: number
-  ): number[] {
-    if (state === null) return []
-
-    const array: number[] = []
-
-    // Функция для поиска ближайшего ненулевого значения при null
-    const findClosestNonNullValue = (idx: number): number => {
-      let offset = 1
-
-      while (true) {
-        // Проверяем индекс слева
-        if (
-          idx - offset >= 0 &&
-          state[idx - offset] &&
-          state[idx - offset][value] !== null &&
-          state[idx - offset][value] !== undefined
-        ) {
-          return state[idx - offset][value] as number
-        }
-
-        // Проверяем индекс справа
-        if (
-          idx + offset < state.length &&
-          state[idx + offset] &&
-          state[idx + offset][value] !== null &&
-          state[idx + offset][value] !== undefined
-        ) {
-          return state[idx + offset][value] as number
-        }
-
-        // Если смещение становится слишком большим, возвращаем 0 или значение по умолчанию
-        if (idx - offset < 0 && idx + offset >= state.length) {
-          return 0 // Возвращаем 0, если не нашли ненулевое значение
-        }
-
-        offset++
-      }
-    }
-
-    for (let i = 0; i < number; i++) {
-      const currentIndex = index + i
-      if (currentIndex < state.length && state[currentIndex]) {
-        const valueAtIndex = state[currentIndex][value]
-        if (valueAtIndex === null) {
-          // Если текущее значение null, ищем ближайшее ненулевое значение
-          array.push(findClosestNonNullValue(currentIndex))
-        } else {
-          array.push(valueAtIndex as number)
-        }
-      } else {
-        array.push(0) // Если состояние отсутствует, добавляем 0
-      }
-    }
-
-    return array
-  }
 
   function changeDate(num: string): Date {
     const day = new Date(num)

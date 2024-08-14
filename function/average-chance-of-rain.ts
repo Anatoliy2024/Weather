@@ -2,6 +2,8 @@ import {
   WeatherState,
   ThreeDayForecast,
   InitialWeatherData,
+  WeatherData,
+  // WeatherDataWeek
 } from "../components/average-chance-of-rain.tsx"
 
 import { getArrayNumber, getNewState } from "../components/open-meteo.tsx"
@@ -11,12 +13,15 @@ import {
   getNewState as getNewStateWeatherApi,
   Forecast,
   ForecastValue,
+  Condition,
 } from "../components/weather-api.tsx"
 
 import {
   MeteoState,
   DataInfoHour,
   getWeatherHourly,
+  getNewState as getNewStateMeteoState,
+  getArrayNumber as getArrayNumberMeteoState,
 } from "../components/meteo-stats.tsx"
 
 import {
@@ -24,6 +29,8 @@ import {
   Day,
   getArrayNumber as getArrayNumberCrossingWeather,
   weatheeWatherMM,
+  getArrayWeather,
+  getNewState as getNewStateCrossingWeather,
 } from "../components/crossing-weather.tsx"
 
 export function getOpenMeteo(
@@ -94,7 +101,10 @@ export function getOpenMeteo(
                   ...prev.openMeteo[stateKey],
                   time: [...prev.openMeteo[stateKey].time, time],
                   icon: [...prev.openMeteo[stateKey].icon, icon],
-                  temp: [...prev.openMeteo[stateKey].temp, temp],
+                  temp: [
+                    ...(prev.openMeteo[stateKey] as WeatherData).temp,
+                    temp,
+                  ],
                   windy: [...prev.openMeteo[stateKey].windy, windy],
                   rainProbably: [
                     ...prev.openMeteo[stateKey].rainProbably,
@@ -223,41 +233,71 @@ export function getWeatherApi(
     ) => {
       return state.hour.forEach((hour, index: number) => {
         if (index % number === 0) {
-          const rainProbably = Math.max(
-            ...getArrayNumberWeatherApi(
+          if (typeof hour.condition === "object" && hour.condition !== null) {
+            const rainProbably = Math.max(
+              ...getArrayNumberWeatherApi(
+                state.hour,
+                "chance_of_rain",
+                index,
+                number
+              )
+            )
+            const snowProbably = Math.max(
+              ...getArrayNumberWeatherApi(
+                state.hour,
+                "chance_of_snow",
+                index,
+                number
+              )
+            )
+            const precipitation = getNewStateWeatherApi(
               state.hour,
-              "chance_of_rain",
+              "precip_mm",
               index,
               number
-            )
-          )
-          const precipitation = getNewStateWeatherApi(
-            state.hour,
-            "precip_mm",
-            index,
-            number
-          ).toFixed(1)
+            ).toFixed(1)
+            const icon = hour.condition.icon
 
-          const timeHour = new Date(hour.time)
-          // console.log(rainProbably, precipitation)
-          setRainProbably((prev) => ({
-            ...prev,
-            stateWeatherApi: {
-              ...prev.stateWeatherApi,
-              [stateKey]: {
-                ...prev.stateWeatherApi[stateKey],
-                time: [...prev.stateWeatherApi[stateKey].time, timeHour],
-                rainProbably: [
-                  ...prev.stateWeatherApi[stateKey].rainProbably,
-                  rainProbably,
-                ],
-                precipitation: [
-                  ...prev.stateWeatherApi[stateKey].precipitation,
-                  +precipitation,
-                ],
+            const temp = Math.round(
+              getNewStateWeatherApi(state.hour, "temp_c", index, number) /
+                number
+            )
+            const windy = Math.round(
+              Math.max(
+                ...getArrayNumberWeatherApi(
+                  state.hour,
+                  "wind_kph",
+                  index,
+                  number
+                )
+              )
+            )
+
+            const timeHour = new Date(hour.time)
+            // console.log(rainProbably, precipitation)
+            setRainProbably((prev) => ({
+              ...prev,
+              stateWeatherApi: {
+                ...prev.stateWeatherApi,
+                [stateKey]: {
+                  ...prev.stateWeatherApi[stateKey],
+                  time: [...prev.stateWeatherApi[stateKey].time, timeHour],
+                  icon: [...prev.stateWeatherApi[stateKey].icon, icon],
+                  temp: [...prev.stateWeatherApi[stateKey].temp, temp],
+                  windy: [...prev.stateWeatherApi[stateKey].windy, windy],
+
+                  rainProbably: [
+                    ...prev.stateWeatherApi[stateKey].rainProbably,
+                    rainProbably > snowProbably ? rainProbably : snowProbably,
+                  ],
+                  precipitation: [
+                    ...prev.stateWeatherApi[stateKey].precipitation,
+                    +precipitation,
+                  ],
+                },
               },
-            },
-          }))
+            }))
+          }
         }
       })
     }
@@ -269,57 +309,116 @@ export function getWeatherApi(
     ) => {
       return state.hour.forEach((hour, index: number) => {
         if (index % number === 0) {
-          const rainProbably = Math.max(
-            ...getArrayNumberWeatherApi(
+          if (typeof hour.condition === "object" && hour.condition !== null) {
+            const rainProbably = Math.max(
+              ...getArrayNumberWeatherApi(
+                state.hour,
+                "chance_of_rain",
+                index,
+                number
+              )
+            )
+            const snowProbably = Math.max(
+              ...getArrayNumberWeatherApi(
+                state.hour,
+                "chance_of_snow",
+                index,
+                number
+              )
+            )
+
+            const precipitation = getNewStateWeatherApi(
               state.hour,
-              "chance_of_rain",
+              "precip_mm",
               index,
               number
+            ).toFixed(1)
+
+            const icon = hour.condition.icon
+
+            const temp = Math.round(
+              getNewStateWeatherApi(state.hour, "temp_c", index, number) /
+                number
             )
-          )
-          const precipitation = getNewStateWeatherApi(
-            state.hour,
-            "precip_mm",
-            index,
-            number
-          ).toFixed(1)
-          const timeHour = new Date(hour.time)
-          //   console.log(rainProbably, precipitation)
-          setRainProbably((prev) => ({
-            ...prev,
-            stateWeatherApi: {
-              ...prev.stateWeatherApi,
-              "3day": {
-                ...prev.stateWeatherApi["3day"],
-                [stateKey]: {
-                  ...prev.stateWeatherApi["3day"][stateKey],
-                  time: [
-                    ...prev.stateWeatherApi["3day"][stateKey].time,
-                    timeHour,
-                  ],
-                  rainProbably: [
-                    ...prev.stateWeatherApi["3day"][stateKey].rainProbably,
-                    rainProbably,
-                  ],
-                  precipitation: [
-                    ...prev.stateWeatherApi["3day"][stateKey].precipitation,
-                    +precipitation,
-                  ],
+            const windy = Math.round(
+              Math.max(
+                ...getArrayNumberWeatherApi(
+                  state.hour,
+                  "wind_kph",
+                  index,
+                  number
+                )
+              )
+            )
+
+            const timeHour = new Date(hour.time)
+            //   console.log(rainProbably, precipitation)
+            setRainProbably((prev) => ({
+              ...prev,
+              stateWeatherApi: {
+                ...prev.stateWeatherApi,
+                "3day": {
+                  ...prev.stateWeatherApi["3day"],
+                  [stateKey]: {
+                    ...prev.stateWeatherApi["3day"][stateKey],
+                    time: [
+                      ...prev.stateWeatherApi["3day"][stateKey].time,
+                      timeHour,
+                    ],
+                    icon: [
+                      ...prev.stateWeatherApi["3day"][stateKey].icon,
+                      icon,
+                    ],
+                    temp: [
+                      ...prev.stateWeatherApi["3day"][stateKey].temp,
+                      temp,
+                    ],
+                    windy: [
+                      ...prev.stateWeatherApi["3day"][stateKey].windy,
+                      windy,
+                    ],
+                    rainProbably: [
+                      ...prev.stateWeatherApi["3day"][stateKey].rainProbably,
+                      rainProbably > snowProbably ? rainProbably : snowProbably,
+                    ],
+                    precipitation: [
+                      ...prev.stateWeatherApi["3day"][stateKey].precipitation,
+                      +precipitation,
+                    ],
+                  },
                 },
               },
-            },
-          }))
+            }))
+          }
         }
       })
     }
 
     arrayWeather.forEach((day) => {
-      const chance_of_rain = day.day.daily_chance_of_rain
-      const precip_mm = day.day.totalprecip_mm
+      const oneDay = day.day
+
+      const chance_of_rain = oneDay.daily_chance_of_rain
+      const chance_of_snow = oneDay.daily_chance_of_snow
+      const precip_mm = oneDay.totalprecip_mm
+      const icon = (oneDay.condition as Condition).icon
+
+      const tempMax = oneDay.maxtemp_c
+      const tempMin = oneDay.mintemp_c
+
+      const windy = oneDay.totalprecip_mm
+
       const time = new Date(day.date)
 
       //   console.log(chance_of_rain, precip_mm)
-      if (typeof chance_of_rain === "number" && typeof precip_mm === "number") {
+      if (
+        typeof chance_of_rain === "number" &&
+        typeof chance_of_snow === "number" &&
+        typeof precip_mm === "number" &&
+        typeof icon === "string" &&
+        typeof tempMax === "number" &&
+        typeof tempMin === "number" &&
+        typeof windy === "number"
+      ) {
         setRainProbably((prev) => ({
           ...prev,
           stateWeatherApi: {
@@ -330,9 +429,27 @@ export function getWeatherApi(
                 ...prev.stateWeatherApi.week.time,
                 time, // Убедитесь, что chance_of_rain это число
               ],
+              icon: [
+                ...prev.stateWeatherApi.week.icon,
+                icon, // Убедитесь, что chance_of_rain это число
+              ],
+              tempMax: [
+                ...prev.stateWeatherApi.week.tempMax,
+                tempMax, // Убедитесь, что chance_of_rain это число
+              ],
+              tempMin: [
+                ...prev.stateWeatherApi.week.tempMin,
+                tempMin, // Убедитесь, что chance_of_rain это число
+              ],
+              windy: [
+                ...prev.stateWeatherApi.week.windy,
+                windy, // Убедитесь, что chance_of_rain это число
+              ],
               rainProbably: [
                 ...prev.stateWeatherApi.week.rainProbably,
-                chance_of_rain, // Убедитесь, что chance_of_rain это число
+                chance_of_rain > chance_of_snow
+                  ? chance_of_rain
+                  : chance_of_snow, // Убедитесь, что chance_of_rain это число
               ],
               precipitation: [
                 ...prev.stateWeatherApi.week.precipitation,
@@ -382,6 +499,16 @@ export function getMeteoState(
         if (index % number === 0) {
           const rainProbably = null
           const precipitation = getWeatherHourly(state, "prcp", index, number)
+
+          const icon = Math.max(
+            ...getArrayNumberMeteoState(state, "coco", index, number)
+          )
+          const temp = Math.round(
+            getNewStateMeteoState(state, "temp", index, number) / number
+          )
+          const windy = Math.round(
+            Math.max(...getArrayNumberMeteoState(state, "wspd", index, number))
+          )
           const precipitationNumber =
             precipitation !== 999 ? +precipitation.toFixed(1) : null
           const time = new Date(hour.time)
@@ -393,6 +520,9 @@ export function getMeteoState(
               [stateKey]: {
                 ...prev.meteoState[stateKey],
                 time: [...prev.meteoState[stateKey].time, time],
+                icon: [...prev.meteoState[stateKey].icon, icon],
+                temp: [...prev.meteoState[stateKey].temp, temp],
+                windy: [...prev.meteoState[stateKey].windy, windy],
                 rainProbably: [
                   ...prev.meteoState[stateKey].rainProbably,
                   rainProbably,
@@ -417,6 +547,16 @@ export function getMeteoState(
         if (index % number === 0) {
           const rainProbably = null
           const precipitation = getWeatherHourly(state, "prcp", index, number)
+          const icon = Math.max(
+            ...getArrayNumberMeteoState(state, "coco", index, number)
+          )
+          const temp = Math.round(
+            getNewStateMeteoState(state, "temp", index, number) / number
+          )
+          const windy = Math.round(
+            Math.max(...getArrayNumberMeteoState(state, "wspd", index, number))
+          )
+
           const precipitationNumber =
             precipitation !== 999 ? +precipitation.toFixed(1) : null
           const time = new Date(hour.time)
@@ -430,6 +570,9 @@ export function getMeteoState(
                 [stateKey]: {
                   ...prev.meteoState["3day"][stateKey],
                   time: [...prev.meteoState["3day"][stateKey].time, time],
+                  icon: [...prev.meteoState["3day"][stateKey].icon, icon],
+                  temp: [...prev.meteoState["3day"][stateKey].temp, temp],
+                  windy: [...prev.meteoState["3day"][stateKey].windy, windy],
                   rainProbably: [
                     ...prev.meteoState["3day"][stateKey].rainProbably,
                     rainProbably,
@@ -454,6 +597,10 @@ export function getMeteoState(
           week: {
             ...prev.meteoState.week,
             time: [...prev.meteoState.week.time, null],
+            icon: [...prev.meteoState.week.icon, null],
+            tempMax: [...prev.meteoState.week.tempMax, null],
+            tempMin: [...prev.meteoState.week.tempMin, null],
+            windy: [...prev.meteoState.week.windy, null],
             rainProbably: [...prev.meteoState.week.rainProbably, null],
             precipitation: [...prev.meteoState.week.precipitation, null],
           },
@@ -495,6 +642,22 @@ export function getCrossingDate(
           )
           const precipitation = weatheeWatherMM(state.hours, index, number)
           const timeHour = new Date(state.datetime + " " + hour.datetime)
+          const icon = getArrayWeather(state.hours, index, number)
+          const temp = Math.round(
+            getNewStateCrossingWeather(state.hours, "temp", index, number) /
+              number
+          )
+          const windy = Math.round(
+            Math.max(
+              ...getArrayNumberCrossingWeather(
+                state.hours,
+                "windspeed",
+                index,
+                number
+              )
+            )
+          )
+
           // console.log(rainProbably, precipitation)
           setRainProbably((prev) => ({
             ...prev,
@@ -503,6 +666,9 @@ export function getCrossingDate(
               [stateKey]: {
                 ...prev.crossingDate[stateKey],
                 time: [...prev.crossingDate[stateKey].time, timeHour],
+                icon: [...prev.crossingDate[stateKey].icon, icon],
+                temp: [...prev.crossingDate[stateKey].temp, temp],
+                windy: [...prev.crossingDate[stateKey].windy, windy],
                 rainProbably: [
                   ...prev.crossingDate[stateKey].rainProbably,
                   rainProbably,
@@ -537,6 +703,23 @@ export function getCrossingDate(
           )
           const precipitation = weatheeWatherMM(state.hours, index, number)
           const timeHour = new Date(state.datetime + " " + hour.datetime)
+
+          const icon = getArrayWeather(state.hours, index, number)
+          const temp = Math.round(
+            getNewStateCrossingWeather(state.hours, "temp", index, number) /
+              number
+          )
+          const windy = Math.round(
+            Math.max(
+              ...getArrayNumberCrossingWeather(
+                state.hours,
+                "windspeed",
+                index,
+                number
+              )
+            )
+          )
+
           //   console.log(rainProbably, precipitation)
           setRainProbably((prev) => ({
             ...prev,
@@ -547,6 +730,9 @@ export function getCrossingDate(
                 [stateKey]: {
                   ...prev.crossingDate["3day"][stateKey],
                   time: [...prev.crossingDate["3day"][stateKey].time, timeHour],
+                  icon: [...prev.crossingDate["3day"][stateKey].icon, icon],
+                  temp: [...prev.crossingDate["3day"][stateKey].temp, temp],
+                  windy: [...prev.crossingDate["3day"][stateKey].windy, windy],
                   rainProbably: [
                     ...prev.crossingDate["3day"][stateKey].rainProbably,
                     rainProbably,
@@ -566,6 +752,12 @@ export function getCrossingDate(
     days.forEach((day) => {
       const rainProbably = Math.round(day.precipprob)
       const precipitation = +Math.max(day.precip, day.snow).toFixed(1)
+
+      const icon = day.icon
+      const tempMax = Math.round(day.tempmax)
+      const tempMin = Math.round(day.tempmin)
+      const windy = Math.round(day.windspeed)
+
       const timeHour = new Date(day.datetime)
       //   console.log(chance_of_rain, precip_mm)
 
@@ -577,6 +769,22 @@ export function getCrossingDate(
             time: [
               ...prev.crossingDate.week.time,
               timeHour, // Убедитесь, что chance_of_rain это число
+            ],
+            icon: [
+              ...prev.crossingDate.week.icon,
+              icon, // Убедитесь, что chance_of_rain это число
+            ],
+            tempMax: [
+              ...prev.crossingDate.week.tempMax,
+              tempMax, // Убедитесь, что chance_of_rain это число
+            ],
+            tempMin: [
+              ...prev.crossingDate.week.tempMin,
+              tempMin, // Убедитесь, что chance_of_rain это число
+            ],
+            windy: [
+              ...prev.crossingDate.week.windy,
+              windy, // Убедитесь, что chance_of_rain это число
             ],
             rainProbably: [
               ...prev.crossingDate.week.rainProbably,

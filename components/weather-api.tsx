@@ -3,7 +3,7 @@ import { DAYS, MONTHS } from "../constants/montsAndDayWeek"
 import clsx from "clsx"
 import { Water, Windy, RainProbability } from "./iconSVG"
 
-type Condition = {
+export type Condition = {
   code: number
   icon: string
 }
