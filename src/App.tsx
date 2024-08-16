@@ -6,7 +6,10 @@ import { UiButton } from "../ui/ui-button"
 import { getWeatherDate } from "../function/weather-api"
 import { WeatherAPI } from "../components/weather-api"
 import { MeteoStats } from "../components/meteo-stats"
-import { AverageChanceOfRain } from "../components/average-chance-of-rain"
+import {
+  AverageChanceOfRain,
+  InitialWeatherData,
+} from "../components/average-chance-of-rain"
 import { CrossingWeather } from "../components/crossing-weather"
 import { fetchWeatherMeteostat } from "../function/meteoStats"
 import { crosingWeather } from "../function/crosingWeather"
@@ -16,6 +19,22 @@ import { crosingWeather } from "../function/crosingWeather"
 // import { getTomorrowData } from "../function/tomorrow"
 // import { getMeteoMaticsData } from "../function/meteoMatics"
 // import { getOpenWeather } from "../function/open-wather"
+import {
+  getOpenMeteo,
+  getWeatherApi,
+  getMeteoState,
+  getCrossingDate,
+} from "../function/average-chance-of-rain.ts"
+import { WeatherBlock } from "../components/weather-block"
+
+const createWeatherTemplate = () => ({
+  time: [],
+  icon: [],
+  temp: [],
+  windy: [],
+  rainProbably: [],
+  precipitation: [],
+})
 
 function App() {
   const [statusShow, setStatusShow] = useState<string>("day")
@@ -33,6 +52,55 @@ function App() {
   const [сrossingDate, setCrossingDate] = useState(null)
   // const [tomorrowDate, setTomorrowDate] = useState(null)
   const [times, setTimes] = useState<Date[]>([])
+
+  const initialWeatherData = {
+    today: createWeatherTemplate(),
+    tomorrow: createWeatherTemplate(),
+    "3day": {
+      today: createWeatherTemplate(),
+      tomorrow: createWeatherTemplate(),
+      nextTomorrow: createWeatherTemplate(),
+    },
+    week: {
+      time: [],
+      icon: [],
+      tempMax: [],
+      tempMin: [],
+      windy: [],
+      rainProbably: [],
+      precipitation: [],
+    },
+  }
+
+  const [rainProbably, setRainProbably] = useState<InitialWeatherData>({
+    openMeteo: initialWeatherData,
+    stateWeatherApi: initialWeatherData,
+    meteoState: initialWeatherData,
+    crossingDate: initialWeatherData,
+  })
+
+  useEffect(() => {
+    setRainProbably({
+      openMeteo: initialWeatherData,
+      stateWeatherApi: initialWeatherData,
+      meteoState: initialWeatherData,
+      crossingDate: initialWeatherData,
+    })
+    if (stateHoyrly !== null && stateDaily !== null) {
+      getOpenMeteo(stateHoyrly, stateDaily, times, setRainProbably)
+    }
+    if (stateWeatherApi !== null) {
+      getWeatherApi(stateWeatherApi, setRainProbably)
+    }
+    if (meteoState !== null) {
+      getMeteoState(meteoState, setRainProbably)
+    }
+    if (сrossingDate !== null) {
+      getCrossingDate(сrossingDate, setRainProbably)
+    }
+  }, [stateHoyrly, stateDaily, stateWeatherApi, meteoState, сrossingDate]) // Зависимости useEffect
+
+  console.log("Главная старница", rainProbably)
 
   useEffect(() => {
     const cityLocal = localStorage.getItem("city")
@@ -186,6 +254,11 @@ function App() {
           сrossingDate={сrossingDate}
           statusShow={statusShow}
         />
+        <WeatherBlock
+          weatherData={rainProbably.openMeteo}
+          statusShow={statusShow}
+          name="open-meteo"
+        />
         <OpenMeteo
           statusShow={statusShow}
           times={times}
@@ -193,8 +266,25 @@ function App() {
           stateDaily={stateDaily}
         />
 
+        <WeatherBlock
+          weatherData={rainProbably.stateWeatherApi}
+          statusShow={statusShow}
+          name="WeatherAPI"
+        />
         <WeatherAPI stateWeatherApi={stateWeatherApi} statusShow={statusShow} />
+
+        <WeatherBlock
+          weatherData={rainProbably.meteoState}
+          statusShow={statusShow}
+          name="MeteoStats"
+        />
         <MeteoStats meteoState={meteoState} statusShow={statusShow} />
+
+        <WeatherBlock
+          weatherData={rainProbably.crossingDate}
+          statusShow={statusShow}
+          name="CrossingWeather"
+        />
         <CrossingWeather сrossingDate={сrossingDate} statusShow={statusShow} />
       </div>
     </div>
