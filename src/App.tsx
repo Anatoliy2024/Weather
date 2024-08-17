@@ -193,6 +193,13 @@ function App() {
   const borderButton = (state: string) =>
     statusShow === state ? "bg-violet-950" : ""
 
+  const [activeIndex, setActiveIndex] = useState(0)
+
+  const handleSlideChange = (index: number) => {
+    setActiveIndex(index)
+    // console.log("index", activeIndex)
+  }
+
   return (
     <div className="min-h-screen  flex items-center justify-center bg-violet-950/80">
       <div className="flex flex-col items-center gap-2 py-8  text-pink-400 w-full">
@@ -253,39 +260,49 @@ function App() {
           meteoState={meteoState}
           сrossingDate={сrossingDate}
           statusShow={statusShow}
+          //   activeIndex={activeIndex}
+          // onSlideChange={handleSlideChange}
         />
         <WeatherBlock
           weatherData={rainProbably.openMeteo}
           statusShow={statusShow}
           name="open-meteo"
+          activeIndex={activeIndex}
+          onSlideChange={handleSlideChange}
         />
-        <OpenMeteo
+        {/* <OpenMeteo
           statusShow={statusShow}
           times={times}
           state={stateHoyrly}
           stateDaily={stateDaily}
-        />
+        /> */}
 
         <WeatherBlock
           weatherData={rainProbably.stateWeatherApi}
           statusShow={statusShow}
           name="WeatherAPI"
+          activeIndex={activeIndex}
+          onSlideChange={handleSlideChange}
         />
-        <WeatherAPI stateWeatherApi={stateWeatherApi} statusShow={statusShow} />
+        {/* <WeatherAPI stateWeatherApi={stateWeatherApi} statusShow={statusShow} /> */}
 
         <WeatherBlock
           weatherData={rainProbably.meteoState}
           statusShow={statusShow}
           name="MeteoStats"
+          activeIndex={activeIndex}
+          onSlideChange={handleSlideChange}
         />
-        <MeteoStats meteoState={meteoState} statusShow={statusShow} />
+        {/* <MeteoStats meteoState={meteoState} statusShow={statusShow} /> */}
 
         <WeatherBlock
           weatherData={rainProbably.crossingDate}
           statusShow={statusShow}
           name="CrossingWeather"
+          activeIndex={activeIndex}
+          onSlideChange={handleSlideChange}
         />
-        <CrossingWeather сrossingDate={сrossingDate} statusShow={statusShow} />
+        {/* <CrossingWeather сrossingDate={сrossingDate} statusShow={statusShow} /> */}
       </div>
     </div>
   )

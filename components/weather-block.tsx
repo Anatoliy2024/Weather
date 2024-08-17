@@ -17,6 +17,7 @@ import {
 import { WeatherIconCrossing } from "./iconSVGcrossing"
 
 import { WeatherState, WeatherData } from "./average-chance-of-rain" //Вроде так
+// import { useEffect, useRef } from "react"
 
 function getDayTime(index: number) {
   let daytime: string = ""
@@ -36,19 +37,19 @@ export function WeatherBlock({
   weatherData,
   statusShow,
   name,
+  activeIndex,
+  onSlideChange,
 }: {
   weatherData: WeatherState
   statusShow: string
   name: string
+  activeIndex: number
+  onSlideChange: (index: number) => void
 }) {
   if (weatherData.today.time.length === 0) return
-  console.log(weatherData)
-  const weatherFromDay = (
-    state: WeatherData
-    //   date: Date,
-    //   times: Date[],
-    //   state: Record<string, number[]>
-  ) => {
+
+  console.log("activeIndex", activeIndex)
+  const weatherFromDay = (state: WeatherData) => {
     if (state.time.every((item) => item instanceof Date)) {
       return (
         <div className=" select-none ">
@@ -67,19 +68,11 @@ export function WeatherBlock({
                 slidesPerView: 8,
                 spaceBetween: 0,
               },
-              // 768: {
-              //   // Если ширина экрана больше или равна 768px
-              //   slidesPerView: 7,
-              //   spaceBetween: 0,
-              // },
-              // 1200: {
-              //   // Если ширина экрана больше или равна 1200px
-              //   slidesPerView: 8,
-              //   spaceBetween: 0,
-              // },
             }}
-            onSlideChange={() => console.log("slide change")}
-            onSwiper={(swiper) => console.log(swiper)}
+            initialSlide={activeIndex}
+            onSlideChange={(swiper) => onSlideChange(swiper.activeIndex)}
+
+            // onSwiper={(swiper) => console.log(swiper)}
           >
             {state.time.map((time: Date, index: number) => {
               const today = new Date()
@@ -115,7 +108,7 @@ export function WeatherBlock({
                       />
                     )}
                     {name === "CrossingWeather" && (
-                      <div className="w-[30px] h-[30px] flex justify-center items-center">
+                      <div className="w-[40px] h-[40px] flex justify-center items-center">
                         <WeatherIconCrossing
                           weather_code={state.icon[index] as string}
                         />
@@ -127,7 +120,7 @@ export function WeatherBlock({
                         <img
                           src={state.icon[index] as string}
                           alt="weatherImg"
-                          width={40}
+                          width={50}
                         />
                       </div>
                     )}
@@ -142,13 +135,17 @@ export function WeatherBlock({
                       {state.windy[index]}
                     </span>
 
-                    <span className="flex gap-1">
-                      <RainProbability />
-                      {state.rainProbably[index]}
-                    </span>
+                    {name !== "MeteoStats" && (
+                      <span className="flex gap-1">
+                        <RainProbability />
+                        {state.rainProbably[index]}
+                      </span>
+                    )}
                     <span className="flex items-center gap-1">
                       <Water />
-                      {state.precipitation[index]}
+                      {state.precipitation[index] !== null
+                        ? state.precipitation[index]
+                        : "null"}
                     </span>
                   </li>
                 </SwiperSlide>
@@ -160,12 +157,7 @@ export function WeatherBlock({
     }
   }
 
-  const renderWeather = (
-    state: WeatherData
-    //   date: Date,
-    //   times: Date[],
-    //   state: Record<string, number[]>
-  ) => {
+  const renderWeather = (state: WeatherData) => {
     if (state.time.every((item) => item instanceof Date)) {
       return (
         <div className="select-none ">
@@ -230,14 +222,18 @@ export function WeatherBlock({
                     <Windy />
                     {state.windy[index]}
                   </span>
+                  {name !== "MeteoStats" && (
+                    <span className="flex gap-1">
+                      <RainProbability />
+                      {state.rainProbably[index]}
+                    </span>
+                  )}
 
-                  <span className="flex gap-1">
-                    <RainProbability />
-                    {state.rainProbably[index]}
-                  </span>
                   <span className="flex items-center gap-1">
                     <Water />
-                    {state.precipitation[index]}
+                    {state.precipitation[index] !== null
+                      ? state.precipitation[index]
+                      : "null"}
                   </span>
                 </li>
               )
@@ -259,7 +255,7 @@ export function WeatherBlock({
           statusShow === "tomorrow" &&
           weatherFromDay(weatherData.tomorrow)}
         {weatherData !== null && statusShow === "3day" && (
-          <div className="flex w-screen  md:w-[750px] ">
+          <div className="flex w-screen  md:w-[850px] ">
             <Swiper
               style={{ width: "100%" }}
               spaceBetween={10}
@@ -275,22 +271,18 @@ export function WeatherBlock({
                   slidesPerView: 3,
                   spaceBetween: 10,
                 },
-                // 1200: {
-                //   // Если ширина экрана больше или равна 1200px
-                //   slidesPerView: 8,
-                //   spaceBetween: 0,
-                // },
               }}
-              onSlideChange={() => console.log("slide change")}
+              initialSlide={activeIndex}
+              onSlideChange={(swiper) => onSlideChange(swiper.activeIndex)}
               onSwiper={(swiper) => console.log(swiper)}
             >
-              <SwiperSlide>
+              <SwiperSlide style={{ minWidth: "250px" }}>
                 {renderWeather(weatherData["3day"].today)}
               </SwiperSlide>
-              <SwiperSlide>
+              <SwiperSlide style={{ minWidth: "250px" }}>
                 {renderWeather(weatherData["3day"].tomorrow)}
               </SwiperSlide>
-              <SwiperSlide>
+              <SwiperSlide style={{ minWidth: "250px" }}>
                 {renderWeather(weatherData["3day"].nextTomorrow)}
               </SwiperSlide>
             </Swiper>
@@ -308,13 +300,9 @@ export function WeatherBlock({
                   slidesPerView: 7,
                   spaceBetween: 0,
                 },
-                // 1200: {
-                //   // Если ширина экрана больше или равна 1200px
-                //   slidesPerView: 8,
-                //   spaceBetween: 0,
-                // },
               }}
-              onSlideChange={() => console.log("slide change")}
+              initialSlide={activeIndex}
+              onSlideChange={(swiper) => onSlideChange(swiper.activeIndex)}
               onSwiper={(swiper) => console.log(swiper)}
             >
               {weatherData.week.time.map((time: any, index: number) => {
@@ -330,10 +318,10 @@ export function WeatherBlock({
                       : ""
 
                   return (
-                    <SwiperSlide key={index} style={{ width: "60px" }}>
+                    <SwiperSlide key={index} style={{ minWidth: "70px" }}>
                       <li
                         className={clsx(
-                          "flex flex-col w-[60px] justify-center items-center  rounded-md ",
+                          "flex flex-col min-w-[70px] justify-center items-center  rounded-md ",
                           today.getDate() === time.getDate()
                             ? "bg-purple-200 text-black"
                             : ""
@@ -382,22 +370,31 @@ export function WeatherBlock({
                           {weatherData.week.tempMax.toString()[0] === "-"
                             ? ""
                             : "+"}
-                          {weatherData.week.tempMax[index]}°
+                          {Math.round(
+                            weatherData.week.tempMax[index] as number
+                          )}
+                          °
                         </span>
                         <span className="rounded bg-blue-200">
                           {weatherData.week.tempMin.toString()[0] === "-"
                             ? ""
                             : "+"}
-                          {weatherData.week.tempMin[index]}°
+                          {Math.round(
+                            weatherData.week.tempMin[index] as number
+                          )}
+                          °
                         </span>
                         <span className="flex gap-1">
                           <Windy />
-                          {weatherData.week.windy[index]}
+                          {Math.round(weatherData.week.windy[index] as number)}
                         </span>
-                        <span className="flex gap-1">
-                          <RainProbability />
-                          {weatherData.week.rainProbably[index]}
-                        </span>
+                        {name !== "MeteoStats" && (
+                          <span className="flex gap-1">
+                            <RainProbability />
+                            {weatherData.week.rainProbably[index]}
+                          </span>
+                        )}
+
                         <span className="flex items-center gap-1">
                           <Water />
                           {weatherData.week.precipitation[index]}

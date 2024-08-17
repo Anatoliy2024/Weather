@@ -13,6 +13,12 @@ import {
 import { RainProbability, Water } from "./iconSVG"
 import clsx from "clsx"
 import { DAYS, MONTHS } from "../constants/montsAndDayWeek.ts"
+import { Swiper, SwiperSlide } from "swiper/react"
+
+import "swiper/css"
+import "swiper/css/navigation"
+import "swiper/css/pagination"
+import "swiper/css/scrollbar"
 
 // import { getNewState, getArrayNumber } from "./weather-api"
 // import { ForecastValue } from "./weather-api"
@@ -296,7 +302,30 @@ export const AverageChanceOfRain = ({
           {firstDate.getDate()}:{DAYS[firstDate.getDay()]}:
           {MONTHS[firstDate.getMonth() + 1]}
         </div>
-        <ul className="flex ">
+        <Swiper
+          style={{ maxWidth: "100vw" }}
+          spaceBetween={0}
+          slidesPerView={5}
+          breakpoints={{
+            500: {
+              // Если ширина экрана больше или равна 576px
+              slidesPerView: 8,
+              spaceBetween: 0,
+            },
+            // 768: {
+            //   // Если ширина экрана больше или равна 768px
+            //   slidesPerView: 7,
+            //   spaceBetween: 0,
+            // },
+            // 1200: {
+            //   // Если ширина экрана больше или равна 1200px
+            //   slidesPerView: 8,
+            //   spaceBetween: 0,
+            // },
+          }}
+          onSlideChange={() => console.log("slide change")}
+          onSwiper={(swiper) => console.log(swiper)}
+        >
           {arrayDays.time.map((hourInfo: any, index: number) => {
             if (
               arrayDays.time[0] !== null &&
@@ -306,48 +335,50 @@ export const AverageChanceOfRain = ({
             ) {
               const today = new Date()
               return (
-                <li
-                  key={index}
-                  className={clsx(
-                    "flex flex-col  justify-center items-center  rounded-md min-w-[60px]",
-                    (today.getHours() === hourInfo.getHours() ||
-                      today.getHours() === hourInfo.getHours() + 1 ||
-                      today.getHours() === hourInfo.getHours() + 2) &&
-                      arrayDays.time[0].getDate() === today.getDate()
-                      ? "bg-purple-200 text-black"
-                      : ""
-                  )}
-                >
-                  <span>
-                    {hourInfo.toLocaleTimeString("ru-RU", {
-                      hour: "2-digit",
-                      minute: "2-digit",
+                <SwiperSlide key={index} style={{ width: "65px" }}>
+                  <li
+                    key={index}
+                    className={clsx(
+                      "flex flex-col  justify-center items-center  rounded-md min-w-[60px]",
+                      (today.getHours() === hourInfo.getHours() ||
+                        today.getHours() === hourInfo.getHours() + 1 ||
+                        today.getHours() === hourInfo.getHours() + 2) &&
+                        arrayDays.time[0].getDate() === today.getDate()
+                        ? "bg-purple-200 text-black"
+                        : ""
+                    )}
+                  >
+                    <span>
+                      {hourInfo.toLocaleTimeString("ru-RU", {
+                        hour: "2-digit",
+                        minute: "2-digit",
 
-                      hour12: false, // Устанавливает 24-часовой формат
-                    })}
-                  </span>
+                        hour12: false, // Устанавливает 24-часовой формат
+                      })}
+                    </span>
 
-                  <span className="flex gap-1">
-                    <RainProbability />
-                    {Math.round(arrayDays.rainProbably[index])}
-                    {/* {Math.max(
+                    <span className="flex gap-1">
+                      <RainProbability />
+                      {Math.round(arrayDays.rainProbably[index])}
+                      {/* {Math.max(
                         ...getArrayNumber(hours, "chance_of_rain", index, 3)
                       )} */}
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <Water />
-                    {+arrayDays.precipitation[index].toFixed(1)}
-                    {/* {getNewState(hours, "precip_mm", index, 3) === 0
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Water />
+                      {+arrayDays.precipitation[index].toFixed(1)}
+                      {/* {getNewState(hours, "precip_mm", index, 3) === 0
                         ? 0
                         : getNewState(hours, "precip_mm", index, 3).toFixed(1)} */}
-                  </span>
-                </li>
+                    </span>
+                  </li>
+                </SwiperSlide>
               )
             } else {
               return null
             }
           })}
-        </ul>
+        </Swiper>
       </div>
     )
   }
@@ -366,12 +397,12 @@ export const AverageChanceOfRain = ({
       arrayDays.time[0] instanceof Date ? arrayDays.time[0] : new Date()
 
     return (
-      <div className="select-none" key={firstDate.getDate()}>
+      <div className="select-none">
         <div>
           {firstDate.getDate()}:{DAYS[firstDate.getDay()]}:
           {MONTHS[firstDate.getMonth() + 1]}
         </div>
-        <ul className="flex ">
+        <ul className="flex justify-between">
           {arrayDays.time.map((hours: any, index: number) => {
             const today = new Date()
             if (
@@ -382,7 +413,7 @@ export const AverageChanceOfRain = ({
                 <li
                   key={index}
                   className={clsx(
-                    "flex flex-col w-[60px] rounded items-center",
+                    "flex flex-col w-[70px] rounded items-center",
                     (today.getHours() === hours.getHours() ||
                       today.getHours() - 1 === hours.getHours() ||
                       today.getHours() - 2 === hours.getHours() ||
@@ -420,18 +451,65 @@ export const AverageChanceOfRain = ({
         {statusShow === "day" && weatherFromDay(allAvarage.today)}
         {statusShow === "tomorrow" && weatherFromDay(allAvarage.tomorrow)}
         {statusShow === "3day" && (
-          <div className="flex">
-            <div className="flex gap-3 ">
-              {weatherFromThreeDay(allAvarage["3day"].today)}
-              {weatherFromThreeDay(allAvarage["3day"].tomorrow)}
-              {weatherFromThreeDay(allAvarage["3day"].nextTomorrow)}
-            </div>
+          <div className="flex w-screen  md:w-[850px] ">
+            <Swiper
+              style={{ width: "100%" }}
+              spaceBetween={10}
+              slidesPerView={1}
+              breakpoints={{
+                482: {
+                  // Если ширина экрана больше или равна 576px
+                  slidesPerView: 2,
+                  spaceBetween: 10,
+                },
+                723: {
+                  // Если ширина экрана больше или равна 768px
+                  slidesPerView: 3,
+                  spaceBetween: 10,
+                },
+                // 1200: {
+                //   // Если ширина экрана больше или равна 1200px
+                //   slidesPerView: 8,
+                //   spaceBetween: 0,
+                // },
+              }}
+              onSlideChange={() => console.log("slide change")}
+              onSwiper={(swiper) => console.log(swiper)}
+            >
+              <SwiperSlide style={{ minWidth: "250px" }}>
+                {weatherFromThreeDay(allAvarage["3day"].today)}
+              </SwiperSlide>
+              <SwiperSlide style={{ minWidth: "250px" }}>
+                {weatherFromThreeDay(allAvarage["3day"].tomorrow)}
+              </SwiperSlide>
+              <SwiperSlide style={{ minWidth: "250px" }}>
+                {weatherFromThreeDay(allAvarage["3day"].nextTomorrow)}
+              </SwiperSlide>
+            </Swiper>
           </div>
         )}
 
         {statusShow === "week" && (
           <div className="w-full select-non">
-            <ul className="flex ">
+            <Swiper
+              style={{ maxWidth: "100vw" }}
+              spaceBetween={0}
+              slidesPerView={5}
+              breakpoints={{
+                723: {
+                  // Если ширина экрана больше или равна 768px
+                  slidesPerView: 7,
+                  spaceBetween: 0,
+                },
+                // 1200: {
+                //   // Если ширина экрана больше или равна 1200px
+                //   slidesPerView: 8,
+                //   spaceBetween: 0,
+                // },
+              }}
+              onSlideChange={() => console.log("slide change")}
+              onSwiper={(swiper) => console.log(swiper)}
+            >
               {allAvarage.week.time.map((day: any, index: number) => {
                 const today = new Date()
 
@@ -444,32 +522,34 @@ export const AverageChanceOfRain = ({
                   allAvarage.week.precipitation[index] !== null
                 ) {
                   return (
-                    <li
-                      key={index}
-                      className={clsx(
-                        "flex flex-col w-[60px] justify-center items-center  rounded-md ",
-                        today.getDate() === day.getDate()
-                          ? "bg-purple-200 text-black"
-                          : ""
-                      )}
-                    >
-                      <div className="flex flex-col">
-                        <span className={weekend}>{day.getDate()}</span>
-                        <span className={weekend}>{DAYS[day.getDay()]}</span>
-                      </div>
-                      <span className="flex gap-1">
-                        <RainProbability />
-                        {Math.round(allAvarage.week.rainProbably[index])}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <Water />
-                        {+allAvarage.week.precipitation[index].toFixed(1)}
-                      </span>
-                    </li>
+                    <SwiperSlide key={index} style={{ minWidth: "70px" }}>
+                      <li
+                        key={index}
+                        className={clsx(
+                          "flex flex-col w-[60px] justify-center items-center  rounded-md ",
+                          today.getDate() === day.getDate()
+                            ? "bg-purple-200 text-black"
+                            : ""
+                        )}
+                      >
+                        <div className="flex flex-col">
+                          <span className={weekend}>{day.getDate()}</span>
+                          <span className={weekend}>{DAYS[day.getDay()]}</span>
+                        </div>
+                        <span className="flex gap-1">
+                          <RainProbability />
+                          {Math.round(allAvarage.week.rainProbably[index])}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <Water />
+                          {+allAvarage.week.precipitation[index].toFixed(1)}
+                        </span>
+                      </li>
+                    </SwiperSlide>
                   )
                 }
               })}
-            </ul>
+            </Swiper>
           </div>
         )}
       </div>
