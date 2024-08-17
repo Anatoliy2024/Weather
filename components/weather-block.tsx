@@ -17,7 +17,7 @@ import {
 import { WeatherIconCrossing } from "./iconSVGcrossing"
 
 import { WeatherState, WeatherData } from "./average-chance-of-rain" //Вроде так
-// import { useEffect, useRef } from "react"
+import { useEffect, useRef } from "react"
 
 function getDayTime(index: number) {
   let daytime: string = ""
@@ -46,7 +46,18 @@ export function WeatherBlock({
   activeIndex: number
   onSlideChange: (index: number) => void
 }) {
-  if (weatherData.today.time.length === 0) return
+  // if (weatherData.today.time.length === 0) return null
+
+  const swiperRef = useRef(null)
+
+  // Этот useEffect всегда будет вызываться, когда activeIndex изменяется
+  useEffect(() => {
+    if (swiperRef.current) {
+      swiperRef.current.swiper.slideTo(activeIndex)
+    }
+  }, [activeIndex])
+
+  if (weatherData.today.time.length === 0) return null
 
   console.log("activeIndex", activeIndex)
   const weatherFromDay = (state: WeatherData) => {
@@ -69,6 +80,7 @@ export function WeatherBlock({
                 spaceBetween: 0,
               },
             }}
+            ref={swiperRef}
             initialSlide={activeIndex}
             onSlideChange={(swiper) => onSlideChange(swiper.activeIndex)}
 
@@ -154,6 +166,8 @@ export function WeatherBlock({
           </Swiper>
         </div>
       )
+    } else {
+      return null
     }
   }
 
@@ -241,6 +255,8 @@ export function WeatherBlock({
           </ul>
         </div>
       )
+    } else {
+      return null
     }
   }
 
@@ -272,6 +288,7 @@ export function WeatherBlock({
                   spaceBetween: 10,
                 },
               }}
+              ref={swiperRef}
               initialSlide={activeIndex}
               onSlideChange={(swiper) => onSlideChange(swiper.activeIndex)}
               onSwiper={(swiper) => console.log(swiper)}
@@ -301,6 +318,7 @@ export function WeatherBlock({
                   spaceBetween: 0,
                 },
               }}
+              ref={swiperRef}
               initialSlide={activeIndex}
               onSlideChange={(swiper) => onSlideChange(swiper.activeIndex)}
               onSwiper={(swiper) => console.log(swiper)}

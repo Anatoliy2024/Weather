@@ -228,25 +228,37 @@ function App() {
           <div className="flex gap-2">
             <UiButton
               className={clsx(borderButton("day"))}
-              onClick={() => setStatusShow("day")}
+              onClick={() => {
+                handleSlideChange(0)
+                setStatusShow("day")
+              }}
             >
               Сегодня
             </UiButton>
             <UiButton
               className={clsx(borderButton("tomorrow"))}
-              onClick={() => setStatusShow("tomorrow")}
+              onClick={() => {
+                handleSlideChange(0)
+                setStatusShow("tomorrow")
+              }}
             >
               Завтра
             </UiButton>
             <UiButton
               className={clsx(borderButton("3day"))}
-              onClick={() => setStatusShow("3day")}
+              onClick={() => {
+                handleSlideChange(0)
+                setStatusShow("3day")
+              }}
             >
               3 дня
             </UiButton>
             <UiButton
               className={clsx(borderButton("week"))}
-              onClick={() => setStatusShow("week")}
+              onClick={() => {
+                handleSlideChange(0)
+                setStatusShow("week")
+              }}
             >
               7 дней
             </UiButton>
@@ -260,8 +272,8 @@ function App() {
           meteoState={meteoState}
           сrossingDate={сrossingDate}
           statusShow={statusShow}
-          //   activeIndex={activeIndex}
-          // onSlideChange={handleSlideChange}
+          activeIndex={activeIndex}
+          onSlideChange={handleSlideChange}
         />
         <WeatherBlock
           weatherData={rainProbably.openMeteo}

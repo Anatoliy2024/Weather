@@ -1,7 +1,7 @@
 import { Forecast } from "./weather-api.tsx"
 import { MeteoState } from "./meteo-stats"
 import { CrossingWeather } from "./crossing-weather"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 // import { getArrayNumber, getDayTime, getNewState } from "./open-meteo.tsx"
 import {
   getOpenMeteo,
@@ -30,6 +30,8 @@ type AllValye = {
   stateWeatherApi: Forecast | null
   meteoState: MeteoState | null
   сrossingDate: CrossingWeather | null
+  activeIndex: number
+  onSlideChange: (index: number) => void
 }
 
 export interface WeatherData {
@@ -92,7 +94,18 @@ export const AverageChanceOfRain = ({
   meteoState,
   сrossingDate,
   statusShow,
+  activeIndex,
+  onSlideChange,
 }: AllValye) => {
+  const swiperRef = useRef(null)
+
+  // Этот useEffect всегда будет вызываться, когда activeIndex изменяется
+  useEffect(() => {
+    if (swiperRef.current) {
+      swiperRef.current.swiper.slideTo(activeIndex)
+    }
+  }, [activeIndex])
+
   const createWeatherTemplate = () => ({
     time: [],
     icon: [],
@@ -323,7 +336,9 @@ export const AverageChanceOfRain = ({
             //   spaceBetween: 0,
             // },
           }}
-          onSlideChange={() => console.log("slide change")}
+          ref={swiperRef}
+          initialSlide={activeIndex}
+          onSlideChange={(swiper) => onSlideChange(swiper.activeIndex)}
           onSwiper={(swiper) => console.log(swiper)}
         >
           {arrayDays.time.map((hourInfo: any, index: number) => {
@@ -473,7 +488,9 @@ export const AverageChanceOfRain = ({
                 //   spaceBetween: 0,
                 // },
               }}
-              onSlideChange={() => console.log("slide change")}
+              ref={swiperRef}
+              initialSlide={activeIndex}
+              onSlideChange={(swiper) => onSlideChange(swiper.activeIndex)}
               onSwiper={(swiper) => console.log(swiper)}
             >
               <SwiperSlide style={{ minWidth: "250px" }}>
@@ -507,7 +524,9 @@ export const AverageChanceOfRain = ({
                 //   spaceBetween: 0,
                 // },
               }}
-              onSlideChange={() => console.log("slide change")}
+              ref={swiperRef}
+              initialSlide={activeIndex}
+              onSlideChange={(swiper) => onSlideChange(swiper.activeIndex)}
               onSwiper={(swiper) => console.log(swiper)}
             >
               {allAvarage.week.time.map((day: any, index: number) => {
@@ -524,7 +543,6 @@ export const AverageChanceOfRain = ({
                   return (
                     <SwiperSlide key={index} style={{ minWidth: "70px" }}>
                       <li
-                        key={index}
                         className={clsx(
                           "flex flex-col w-[70px] justify-center items-center  rounded-md ",
                           today.getDate() === day.getDate()
