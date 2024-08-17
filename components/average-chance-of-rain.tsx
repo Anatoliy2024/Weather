@@ -339,7 +339,7 @@ export const AverageChanceOfRain = ({
                   <li
                     key={index}
                     className={clsx(
-                      "flex flex-col  justify-center items-center  rounded-md min-w-[60px]",
+                      "flex flex-col  justify-center items-center  rounded-md w-[65px]",
                       (today.getHours() === hourInfo.getHours() ||
                         today.getHours() === hourInfo.getHours() + 1 ||
                         today.getHours() === hourInfo.getHours() + 2) &&
@@ -445,7 +445,7 @@ export const AverageChanceOfRain = ({
   }
 
   return (
-    <div className="max-w-full">
+    <div className="">
       <h2 className="text-center">Среднее занчение осадков</h2>
       <div className="  flex flex-col gap-4  rounded-md bg-violet-50 text-pink-800">
         {statusShow === "day" && weatherFromDay(allAvarage.today)}
@@ -526,7 +526,7 @@ export const AverageChanceOfRain = ({
                       <li
                         key={index}
                         className={clsx(
-                          "flex flex-col w-[60px] justify-center items-center  rounded-md ",
+                          "flex flex-col w-[70px] justify-center items-center  rounded-md ",
                           today.getDate() === day.getDate()
                             ? "bg-purple-200 text-black"
                             : ""
