@@ -229,7 +229,7 @@ function App() {
             <UiButton
               className={clsx(borderButton("day"))}
               onClick={() => {
-                handleSlideChange(0)
+                handleSlideChange(3)
                 setStatusShow("day")
               }}
             >
@@ -238,7 +238,7 @@ function App() {
             <UiButton
               className={clsx(borderButton("tomorrow"))}
               onClick={() => {
-                handleSlideChange(0)
+                handleSlideChange(3)
                 setStatusShow("tomorrow")
               }}
             >
