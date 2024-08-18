@@ -49,7 +49,7 @@ export function WeatherBlock({
   // if (weatherData.today.time.length === 0) return null
 
   const swiperRef = useRef(null)
-
+  // const swiperRef = useRef<SwiperType | null>(null)
   // Этот useEffect всегда будет вызываться, когда activeIndex изменяется
   useEffect(() => {
     if (swiperRef.current) {
@@ -210,7 +210,7 @@ export function WeatherBlock({
                     />
                   )}
                   {name === "CrossingWeather" && (
-                    <div className="w-[30px] h-[30px] flex justify-center items-center">
+                    <div className="w-[40px] h-[40px] flex justify-center items-center">
                       <WeatherIconCrossing
                         weather_code={state.icon[index] as string}
                       />
@@ -222,7 +222,7 @@ export function WeatherBlock({
                       <img
                         src={state.icon[index] as string}
                         alt="weatherImg"
-                        width={40}
+                        width={50}
                       />
                     </div>
                   )}
@@ -366,7 +366,7 @@ export function WeatherBlock({
                           />
                         )}
                         {name === "CrossingWeather" && (
-                          <div className="w-[30px] h-[30px] flex justify-center items-center">
+                          <div className="w-[40px] h-[40px] flex justify-center items-center">
                             <WeatherIconCrossing
                               weather_code={
                                 weatherData.week.icon[index] as string
@@ -380,7 +380,7 @@ export function WeatherBlock({
                             <img
                               src={weatherData.week.icon[index] as string}
                               alt="weatherImg"
-                              width={40}
+                              width={50}
                             />
                           </div>
                         )}

@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react"
-import { OpenMeteo } from "../components/open-meteo"
+// import { OpenMeteo } from "../components/open-meteo"
 import { fetchWeatherByCity } from "../function/open-meteo"
 import clsx from "clsx"
 import { UiButton } from "../ui/ui-button"
 import { getWeatherDate } from "../function/weather-api"
-import { WeatherAPI } from "../components/weather-api"
-import { MeteoStats } from "../components/meteo-stats"
+// import { WeatherAPI } from "../components/weather-api"
+// import { MeteoStats } from "../components/meteo-stats"
 import {
   AverageChanceOfRain,
   InitialWeatherData,
 } from "../components/average-chance-of-rain"
-import { CrossingWeather } from "../components/crossing-weather"
+// import { CrossingWeather } from "../components/crossing-weather"
 import { fetchWeatherMeteostat } from "../function/meteoStats"
 import { crosingWeather } from "../function/crosingWeather"
 // import { getWeatherByLocation } from "../function/weatherByLocation"
