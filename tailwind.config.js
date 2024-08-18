@@ -7,6 +7,10 @@ export default {
     "./ui/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
+    screens: {
+      od: "850px",
+      // => @media (min-width: 640px) { ... }
+    },
     extend: {},
   },
   plugins: [],
