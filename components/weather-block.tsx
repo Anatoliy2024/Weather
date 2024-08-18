@@ -142,18 +142,18 @@ export function WeatherBlock({
                       {state.temp[index]}°
                     </span>
 
-                    <span className="flex gap-1">
+                    <span className="flex gap-[2px]">
                       <Windy />
                       {state.windy[index]}
                     </span>
 
                     {name !== "MeteoStats" && (
-                      <span className="flex gap-1">
+                      <span className="flex  gap-[2px]">
                         <RainProbability />
                         {state.rainProbably[index]}
                       </span>
                     )}
-                    <span className="flex items-center gap-1">
+                    <span className="flex items-center  gap-[2px]">
                       <Water />
                       {state.precipitation[index] !== null
                         ? state.precipitation[index]
@@ -232,18 +232,18 @@ export function WeatherBlock({
                     {state.temp[index]}°
                   </span>
 
-                  <span className="flex gap-1">
+                  <span className="flex gap-[2px]">
                     <Windy />
                     {state.windy[index]}
                   </span>
                   {name !== "MeteoStats" && (
-                    <span className="flex gap-1">
+                    <span className="flex gap-[2px]">
                       <RainProbability />
                       {state.rainProbably[index]}
                     </span>
                   )}
 
-                  <span className="flex items-center gap-1">
+                  <span className="flex items-center gap-[2px]">
                     <Water />
                     {state.precipitation[index] !== null
                       ? state.precipitation[index]
@@ -402,18 +402,18 @@ export function WeatherBlock({
                           )}
                           °
                         </span>
-                        <span className="flex gap-1">
+                        <span className="flex gap-[2px]">
                           <Windy />
                           {Math.round(weatherData.week.windy[index] as number)}
                         </span>
                         {name !== "MeteoStats" && (
-                          <span className="flex gap-1">
+                          <span className="flex gap-[2px]">
                             <RainProbability />
                             {weatherData.week.rainProbably[index]}
                           </span>
                         )}
 
-                        <span className="flex items-center gap-1">
+                        <span className="flex items-center gap-[2px]">
                           <Water />
                           {weatherData.week.precipitation[index]}
                         </span>
