@@ -193,7 +193,7 @@ function App() {
   const borderButton = (state: string) =>
     statusShow === state ? "bg-violet-950" : ""
 
-  const [activeIndex, setActiveIndex] = useState(0)
+  const [activeIndex, setActiveIndex] = useState(3)
 
   const handleSlideChange = (index: number) => {
     setActiveIndex(index)
