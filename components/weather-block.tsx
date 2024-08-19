@@ -187,7 +187,7 @@ export function WeatherBlock({
                 <li
                   key={index}
                   className={clsx(
-                    "flex flex-col rounded items-center w-[65px]",
+                    "flex flex-col rounded items-center w-[60px]",
                     (today.getHours() === hour.getHours() ||
                       today.getHours() === hour.getHours() + 1 ||
                       today.getHours() === hour.getHours() + 2 ||
@@ -293,13 +293,13 @@ export function WeatherBlock({
               onSlideChange={(swiper) => onSlideChange(swiper.activeIndex)}
               onSwiper={(swiper) => console.log(swiper)}
             >
-              <SwiperSlide style={{ minWidth: "250px" }}>
+              <SwiperSlide style={{ minWidth: "240px" }}>
                 {renderWeather(weatherData["3day"].today)}
               </SwiperSlide>
-              <SwiperSlide style={{ minWidth: "250px" }}>
+              <SwiperSlide style={{ minWidth: "240px" }}>
                 {renderWeather(weatherData["3day"].tomorrow)}
               </SwiperSlide>
-              <SwiperSlide style={{ minWidth: "250px" }}>
+              <SwiperSlide style={{ minWidth: "240px" }}>
                 {renderWeather(weatherData["3day"].nextTomorrow)}
               </SwiperSlide>
             </Swiper>
