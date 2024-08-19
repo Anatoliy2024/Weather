@@ -271,7 +271,7 @@ export function WeatherBlock({
           statusShow === "tomorrow" &&
           weatherFromDay(weatherData.tomorrow)}
         {weatherData !== null && statusShow === "3day" && (
-          <div className="flex w-screen  od:w-[850px]">
+          <div className="flex w-screen od:w-[850px]">
             <Swiper
               style={{ width: "100%" }}
               spaceBetween={10}
