@@ -187,7 +187,7 @@ export function WeatherBlock({
                 <li
                   key={index}
                   className={clsx(
-                    "flex flex-col rounded items-center w-[70px]",
+                    "flex flex-col rounded items-center w-[65px]",
                     (today.getHours() === hour.getHours() ||
                       today.getHours() === hour.getHours() + 1 ||
                       today.getHours() === hour.getHours() + 2 ||
