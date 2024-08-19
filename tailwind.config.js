@@ -10,6 +10,8 @@ export default {
     screens: {
       od: "850px",
       // => @media (min-width: 640px) { ... }
+
+      text: { max: "800px" },
     },
     extend: {},
   },
