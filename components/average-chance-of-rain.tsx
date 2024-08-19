@@ -52,6 +52,26 @@ export interface WeatherDataWeek {
   precipitation: (number | null)[]
 }
 
+type dayAllAvarage = Pick<
+  WeatherData,
+  "time" | "rainProbably" | "precipitation"
+>
+type weekAllAvarage = Pick<
+  WeatherDataWeek,
+  "time" | "rainProbably" | "precipitation"
+>
+
+type allWeatherState = {
+  today: dayAllAvarage
+  tomorrow: dayAllAvarage
+  "3day": {
+    today: dayAllAvarage
+    tomorrow: dayAllAvarage
+    nextTomorrow: dayAllAvarage
+  }
+  week: weekAllAvarage
+}
+
 export interface ThreeDayForecast {
   today: WeatherData
   tomorrow: WeatherData
@@ -140,7 +160,8 @@ export const AverageChanceOfRain = ({
     crossingDate: initialWeatherData,
   })
 
-  const [allAvarage, setAllAvarage] = useState<WeatherState>(initialWeatherData)
+  const [allAvarage, setAllAvarage] =
+    useState<allWeatherState>(initialWeatherData)
 
   useEffect(() => {
     setRainProbably({
@@ -296,7 +317,7 @@ export const AverageChanceOfRain = ({
   console.log("Массив", rainProbably)
   console.log("allAvarage", allAvarage)
 
-  const weatherFromDay = (arrayDays: WeatherData) => {
+  const weatherFromDay = (arrayDays: dayAllAvarage) => {
     if (
       !arrayDays.time ||
       arrayDays.time.length === 0 ||
@@ -398,7 +419,7 @@ export const AverageChanceOfRain = ({
     )
   }
 
-  const weatherFromThreeDay = (arrayDays: WeatherData) => {
+  const weatherFromThreeDay = (arrayDays: dayAllAvarage) => {
     if (
       !arrayDays.time ||
       arrayDays.time.length === 0 ||
