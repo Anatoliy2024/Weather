@@ -187,7 +187,7 @@ export function WeatherBlock({
                 <li
                   key={index}
                   className={clsx(
-                    "flex flex-col rounded items-center w-[60px]",
+                    "flex flex-col rounded items-center w-[70px]",
                     (today.getHours() === hour.getHours() ||
                       today.getHours() === hour.getHours() + 1 ||
                       today.getHours() === hour.getHours() + 2 ||
@@ -271,7 +271,7 @@ export function WeatherBlock({
           statusShow === "tomorrow" &&
           weatherFromDay(weatherData.tomorrow)}
         {weatherData !== null && statusShow === "3day" && (
-          <div className="flex w-screen  od:w-[850px] text:text-[18px]">
+          <div className="flex w-screen  od:w-[900px] ">
             <Swiper
               style={{ width: "100%" }}
               spaceBetween={10}
