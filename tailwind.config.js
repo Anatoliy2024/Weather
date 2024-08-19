@@ -8,7 +8,7 @@ export default {
   ],
   theme: {
     screens: {
-      od: "850px",
+      od: "900px",
       // => @media (min-width: 640px) { ... }
 
       text: { max: "800px" },
