@@ -466,7 +466,7 @@ export const AverageChanceOfRain = ({
         {statusShow === "day" && weatherFromDay(allAvarage.today)}
         {statusShow === "tomorrow" && weatherFromDay(allAvarage.tomorrow)}
         {statusShow === "3day" && (
-          <div className="flex w-screen  md:w-[850px] ">
+          <div className="flex w-screen  od:w-[850px] ">
             <Swiper
               style={{ width: "100%" }}
               spaceBetween={10}
