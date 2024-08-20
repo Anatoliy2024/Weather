@@ -514,13 +514,13 @@ export const AverageChanceOfRain = ({
               onSlideChange={(swiper) => onSlideChange(swiper.activeIndex)}
               onSwiper={(swiper) => console.log(swiper)}
             >
-              <SwiperSlide style={{ minWidth: "250px" }}>
+              <SwiperSlide style={{ minWidth: "240px" }}>
                 {weatherFromThreeDay(allAvarage["3day"].today)}
               </SwiperSlide>
-              <SwiperSlide style={{ minWidth: "250px" }}>
+              <SwiperSlide style={{ minWidth: "240px" }}>
                 {weatherFromThreeDay(allAvarage["3day"].tomorrow)}
               </SwiperSlide>
-              <SwiperSlide style={{ minWidth: "250px" }}>
+              <SwiperSlide style={{ minWidth: "240px" }}>
                 {weatherFromThreeDay(allAvarage["3day"].nextTomorrow)}
               </SwiperSlide>
             </Swiper>
