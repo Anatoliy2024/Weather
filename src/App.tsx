@@ -94,19 +94,19 @@ function App() {
     }
   }, [stateHoyrly, stateDaily, stateWeatherApi, meteoState, сrossingDate]) // Зависимости useEffect
 
-  console.log("Главная старница", rainProbably)
+  // console.log("Главная старница", rainProbably)
 
   useEffect(() => {
     const cityLocal = localStorage.getItem("city")
     if (cityLocal) {
       setCityValue(cityLocal)
-      console.log("Пошло", cityLocal)
+      // console.log("Пошло", cityLocal)
       handleFetchWeather(cityLocal)
     }
   }, [])
   const handleFetchWeather = async (city: string) => {
     try {
-      console.log(city)
+      // console.log(city)
       if (city) {
         setLoading(true)
 
@@ -136,7 +136,7 @@ function App() {
             const times = weatherHourly.time.map(
               (timestamp: string) => new Date(timestamp)
             )
-            console.log("open meteo", weatherHourly, weatherDaily)
+            // console.log("open meteo", weatherHourly, weatherDaily)
             setTimes(times)
           } else {
             console.error("Нет данных о погоде")
@@ -150,16 +150,16 @@ function App() {
 
         if (additionalData) {
           setStateWeatherApi(additionalData)
-          console.log("WeatherAPI", additionalData)
+          // console.log("WeatherAPI", additionalData)
         }
 
         if (weatherMeteostat) {
           setMeteoState(weatherMeteostat)
-          console.log("weatherMeteostat", weatherMeteostat)
+          // console.log("weatherMeteostat", weatherMeteostat)
         }
         if (crosingWeatherDate) {
           setCrossingDate(crosingWeatherDate)
-          console.log("crosingWeatherDate", crosingWeatherDate)
+          // console.log("crosingWeatherDate", crosingWeatherDate)
         }
 
         setLoading(false)

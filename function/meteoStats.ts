@@ -28,7 +28,7 @@ const getWeatherData = async (latitude: number, longitude: number) => {
   const currentEndDate = new Date(startOfDayUTC)
   currentEndDate.setDate(startOfDayUTC.getDate() + 6)
   const endDate = formatDateToYYYYMMDD(currentEndDate)
-  console.log(startDate, endDate)
+  // console.log(startDate, endDate)
   const options = {
     method: "GET",
     url: `https://meteostat.p.rapidapi.com/point/hourly`,
