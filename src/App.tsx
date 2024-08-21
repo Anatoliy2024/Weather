@@ -1,24 +1,18 @@
 import { useEffect, useState } from "react"
-// import { OpenMeteo } from "../components/open-meteo"
+
 import { fetchWeatherByCity } from "../function/open-meteo"
 import clsx from "clsx"
 import { UiButton } from "../ui/ui-button"
 import { getWeatherDate } from "../function/weather-api"
-// import { WeatherAPI } from "../components/weather-api"
-// import { MeteoStats } from "../components/meteo-stats"
+
 import {
   AverageChanceOfRain,
   InitialWeatherData,
 } from "../components/average-chance-of-rain"
-// import { CrossingWeather } from "../components/crossing-weather"
+
 import { fetchWeatherMeteostat } from "../function/meteoStats"
 import { crosingWeather } from "../function/crosingWeather"
-// import { getWeatherByLocation } from "../function/weatherByLocation"
-// import { getNinjacData } from "../function/ninjac"
-// import { getWeatherGovData } from "../function/weatherGov"
-// import { getTomorrowData } from "../function/tomorrow"
-// import { getMeteoMaticsData } from "../function/meteoMatics"
-// import { getOpenWeather } from "../function/open-wather"
+
 import {
   getOpenMeteo,
   getWeatherApi,
@@ -115,18 +109,12 @@ function App() {
       console.log(city)
       if (city) {
         setLoading(true)
-        // const {weatherHourly,weatherDaily}:{weatherHourly:Record<string, number[]>| null,weatherDaily:Record<string, number[]> | null} = await fetchWeatherByCity(city)
+
         const results = await Promise.allSettled([
           fetchWeatherByCity(city), // Ваш основной запрос
           getWeatherDate(city), // Дополнительный запрос
           fetchWeatherMeteostat(city),
-          // getWeatherGovData(city),
-          // getTomorrowData(city),
-          // getOpenWeather(city),
-          // getMeteoMaticsData(city),
-          // getNinjacData(city),
           crosingWeather(city),
-          // getWeatherByLocation(city),
         ])
 
         const weatherData =
@@ -135,12 +123,8 @@ function App() {
           results[1].status === "fulfilled" ? results[1].value : null
         const weatherMeteostat =
           results[2].status === "fulfilled" ? results[2].value : null
-        // const tomorrowData =
-        //   results[3].status === "fulfilled" ? results[3].value : null
         const crosingWeatherDate =
           results[3].status === "fulfilled" ? results[3].value : null
-        // const weatherByLocation =
-        //   results[4].status === "fulfilled" ? results[4].value : null
 
         if (weatherData) {
           localStorage.setItem("city", city)
@@ -177,10 +161,6 @@ function App() {
           setCrossingDate(crosingWeatherDate)
           console.log("crosingWeatherDate", crosingWeatherDate)
         }
-        // if (weatherByLocation) {
-        //   // setCrossingDate(crosingWeatherDate)
-        //   console.log("weatherByLocation", weatherByLocation)
-        // }
 
         setLoading(false)
       }
@@ -216,9 +196,6 @@ function App() {
               className="p-1 rounded bg-violet-950"
               onClick={() => {
                 handleFetchWeather(cityValue)
-
-                // const WeatherDate = getWeatherDate(cityValue)
-                // setStateWeatherApi(WeatherDate)
               }}
               disabled={loading}
             >
@@ -282,12 +259,6 @@ function App() {
           activeIndex={activeIndex}
           onSlideChange={handleSlideChange}
         />
-        {/* <OpenMeteo
-          statusShow={statusShow}
-          times={times}
-          state={stateHoyrly}
-          stateDaily={stateDaily}
-        /> */}
 
         <WeatherBlock
           weatherData={rainProbably.stateWeatherApi}
@@ -296,7 +267,6 @@ function App() {
           activeIndex={activeIndex}
           onSlideChange={handleSlideChange}
         />
-        {/* <WeatherAPI stateWeatherApi={stateWeatherApi} statusShow={statusShow} /> */}
 
         <WeatherBlock
           weatherData={rainProbably.meteoState}
@@ -305,7 +275,6 @@ function App() {
           activeIndex={activeIndex}
           onSlideChange={handleSlideChange}
         />
-        {/* <MeteoStats meteoState={meteoState} statusShow={statusShow} /> */}
 
         <WeatherBlock
           weatherData={rainProbably.crossingDate}
@@ -314,13 +283,9 @@ function App() {
           activeIndex={activeIndex}
           onSlideChange={handleSlideChange}
         />
-        {/* <CrossingWeather сrossingDate={сrossingDate} statusShow={statusShow} /> */}
       </div>
     </div>
   )
 }
 
 export default App
-
-// const weatherAPI = "eabd204bd30242dc895134613242707"
-// const apiKey = process.env.REACT_APP_API_KEY

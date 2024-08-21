@@ -1,8 +1,8 @@
-import { Forecast } from "./weather-api.tsx"
-import { MeteoState } from "./meteo-stats"
-import { CrossingWeather } from "./crossing-weather"
+import { Forecast } from "../function/weather-api.ts"
+import { MeteoState } from "../function/meteoStats.ts"
+import { CrossingWeather } from "../function/crosingWeather.ts"
 import { useState, useEffect, useRef } from "react"
-// import { getArrayNumber, getDayTime, getNewState } from "./open-meteo.tsx"
+
 import {
   getOpenMeteo,
   getWeatherApi,
@@ -20,8 +20,6 @@ import "swiper/css/navigation"
 import "swiper/css/pagination"
 import "swiper/css/scrollbar"
 
-// import { getNewState, getArrayNumber } from "./weather-api"
-// import { ForecastValue } from "./weather-api"
 type AllValye = {
   statusShow: string
   state: Record<string, number[]> | null
@@ -342,20 +340,9 @@ export const AverageChanceOfRain = ({
           slidesPerView={5}
           breakpoints={{
             500: {
-              // Если ширина экрана больше или равна 576px
               slidesPerView: 8,
               spaceBetween: 0,
             },
-            // 768: {
-            //   // Если ширина экрана больше или равна 768px
-            //   slidesPerView: 7,
-            //   spaceBetween: 0,
-            // },
-            // 1200: {
-            //   // Если ширина экрана больше или равна 1200px
-            //   slidesPerView: 8,
-            //   spaceBetween: 0,
-            // },
           }}
           ref={swiperRef}
           initialSlide={activeIndex}
@@ -396,16 +383,10 @@ export const AverageChanceOfRain = ({
                     <span className="flex gap-1">
                       <RainProbability />
                       {Math.round(arrayDays.rainProbably[index])}
-                      {/* {Math.max(
-                        ...getArrayNumber(hours, "chance_of_rain", index, 3)
-                      )} */}
                     </span>
                     <span className="flex items-center gap-1">
                       <Water />
                       {+arrayDays.precipitation[index].toFixed(1)}
-                      {/* {getNewState(hours, "precip_mm", index, 3) === 0
-                        ? 0
-                        : getNewState(hours, "precip_mm", index, 3).toFixed(1)} */}
                     </span>
                   </li>
                 </SwiperSlide>
@@ -503,11 +484,6 @@ export const AverageChanceOfRain = ({
                   slidesPerView: 3,
                   spaceBetween: 10,
                 },
-                // 1200: {
-                //   // Если ширина экрана больше или равна 1200px
-                //   slidesPerView: 8,
-                //   spaceBetween: 0,
-                // },
               }}
               ref={swiperRef}
               initialSlide={activeIndex}
@@ -539,11 +515,6 @@ export const AverageChanceOfRain = ({
                   slidesPerView: 7,
                   spaceBetween: 0,
                 },
-                // 1200: {
-                //   // Если ширина экрана больше или равна 1200px
-                //   slidesPerView: 8,
-                //   spaceBetween: 0,
-                // },
               }}
               ref={swiperRef}
               initialSlide={activeIndex}

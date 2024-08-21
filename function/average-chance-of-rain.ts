@@ -6,7 +6,7 @@ import {
   // WeatherDataWeek
 } from "../components/average-chance-of-rain.tsx"
 
-import { getArrayNumber, getNewState } from "../components/open-meteo.tsx"
+import { getArrayNumber, getNewState } from "./open-meteo.ts"
 
 import {
   getArrayNumber as getArrayNumberWeatherApi,
@@ -14,7 +14,7 @@ import {
   Forecast,
   ForecastValue,
   Condition,
-} from "../components/weather-api.tsx"
+} from "./weather-api.ts"
 
 import {
   MeteoState,
@@ -22,7 +22,7 @@ import {
   getWeatherHourly,
   getNewState as getNewStateMeteoState,
   getArrayNumber as getArrayNumberMeteoState,
-} from "../components/meteo-stats.tsx"
+} from "./meteoStats.ts"
 
 import {
   CrossingWeather,
@@ -31,7 +31,7 @@ import {
   weatheeWatherMM,
   getArrayWeather,
   getNewState as getNewStateCrossingWeather,
-} from "../components/crossing-weather.tsx"
+} from "./crosingWeather.ts"
 
 export function getOpenMeteo(
   state: Record<string, number[]> | null,
