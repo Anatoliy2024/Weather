@@ -405,7 +405,7 @@ export function getWeatherApi(
       const tempMax = oneDay.maxtemp_c
       const tempMin = oneDay.mintemp_c
 
-      const windy = oneDay.totalprecip_mm
+      const windy = oneDay.maxwind_kph
 
       const time = new Date(day.date)
 

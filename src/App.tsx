@@ -150,7 +150,7 @@ function App() {
 
         if (additionalData) {
           setStateWeatherApi(additionalData)
-          // console.log("WeatherAPI", additionalData)
+          console.log("WeatherAPI", additionalData)
         }
 
         if (weatherMeteostat) {
