@@ -16,13 +16,13 @@ html {
 } */
 .swiper-pagination-bullet {
   @apply bg-violet-900; /* Стилизация цвета фона пагинации */
-  @apply w-2;
-  @apply h-2;
+  /* @apply w-2;
+  @apply h-2; */
 }
 
 /* Индикатор пагинации - Цвет при активном элементе */
 .swiper-pagination-bullet-active {
   @apply bg-violet-900; /* Стилизация активного цвета фона */
-  @apply w-3; /* Стилизация активного цвета фона */
-  @apply h-3; /* Стилизация активного цвета фона */
+  /* @apply w-3; 
+  @apply h-3; */
 }
