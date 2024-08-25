@@ -2,7 +2,7 @@ import { Forecast } from "../function/weather-api.ts"
 import { MeteoState } from "../function/meteoStats.ts"
 import { CrossingWeather } from "../function/crosingWeather.ts"
 import { useState, useEffect, useRef } from "react"
-
+import { Pagination } from "swiper/modules"
 import {
   getOpenMeteo,
   getWeatherApi,
@@ -16,9 +16,8 @@ import { DAYS, MONTHS } from "../constants/montsAndDayWeek.ts"
 import { Swiper, SwiperSlide } from "swiper/react"
 
 import "swiper/css"
-import "swiper/css/navigation"
+
 import "swiper/css/pagination"
-import "swiper/css/scrollbar"
 
 type AllValye = {
   statusShow: string
@@ -349,7 +348,9 @@ export const AverageChanceOfRain = ({
           ref={swiperRef}
           initialSlide={activeIndex}
           onSlideChange={(swiper) => onSlideChange(swiper.activeIndex)}
-          onSwiper={(swiper) => console.log(swiper)}
+          // onSwiper={(swiper) => console.log(swiper)}
+          modules={[Pagination]}
+          pagination={{ clickable: true }}
         >
           {arrayDays.time.map((hourInfo: any, index: number) => {
             if (
@@ -492,7 +493,9 @@ export const AverageChanceOfRain = ({
               ref={swiperRef}
               initialSlide={activeIndex}
               onSlideChange={(swiper) => onSlideChange(swiper.activeIndex)}
-              onSwiper={(swiper) => console.log(swiper)}
+              // onSwiper={(swiper) => console.log(swiper)}
+              modules={[Pagination]}
+              pagination={{ clickable: true }}
             >
               <SwiperSlide style={{ minWidth: "200px" }}>
                 {weatherFromThreeDay(allAvarage["3day"].today)}
@@ -523,7 +526,9 @@ export const AverageChanceOfRain = ({
               ref={swiperRef}
               initialSlide={activeIndex}
               onSlideChange={(swiper) => onSlideChange(swiper.activeIndex)}
-              onSwiper={(swiper) => console.log(swiper)}
+              // onSwiper={(swiper) => console.log(swiper)}
+              modules={[Pagination]}
+              pagination={{ clickable: true }}
             >
               {allAvarage.week.time.map((day: any, index: number) => {
                 const today = new Date()

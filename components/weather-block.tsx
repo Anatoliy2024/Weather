@@ -1,11 +1,12 @@
 import { DAYS, MONTHS } from "../constants/montsAndDayWeek"
 import { Swiper, SwiperSlide } from "swiper/react"
+import { Pagination } from "swiper/modules"
+
 import clsx from "clsx"
 
 import "swiper/css"
-import "swiper/css/navigation"
+
 import "swiper/css/pagination"
-import "swiper/css/scrollbar"
 
 import {
   WeatherIcon,
@@ -83,6 +84,8 @@ export function WeatherBlock({
             ref={swiperRef}
             initialSlide={activeIndex}
             onSlideChange={(swiper) => onSlideChange(swiper.activeIndex)}
+            modules={[Pagination]}
+            pagination={{ clickable: true }}
 
             // onSwiper={(swiper) => console.log(swiper)}
           >
@@ -292,6 +295,8 @@ export function WeatherBlock({
               initialSlide={activeIndex}
               onSlideChange={(swiper) => onSlideChange(swiper.activeIndex)}
               onSwiper={(swiper) => console.log(swiper)}
+              modules={[Pagination]}
+              pagination={{ clickable: true }}
             >
               <SwiperSlide style={{ minWidth: "200px" }}>
                 {renderWeather(weatherData["3day"].today)}
@@ -322,6 +327,8 @@ export function WeatherBlock({
               initialSlide={activeIndex}
               onSlideChange={(swiper) => onSlideChange(swiper.activeIndex)}
               onSwiper={(swiper) => console.log(swiper)}
+              modules={[Pagination]}
+              pagination={{ clickable: true }}
             >
               {weatherData.week.time.map((time: any, index: number) => {
                 if (
