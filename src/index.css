@@ -28,10 +28,10 @@ html {
   @apply h-3; */
 }
 
-.swiper-pagination {
+/* .swiper-pagination {
   bottom: 0px !important;
 
-  /* Корректируем позицию для центрирования */
+ 
 
-  position: absolute; /* Устанавливаем позицию как абсолютную */
-}
+  position: absolute; 
+} */
