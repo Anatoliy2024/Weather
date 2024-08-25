@@ -418,7 +418,7 @@ export const AverageChanceOfRain = ({
       arrayDays.time[0] instanceof Date ? arrayDays.time[0] : new Date()
 
     return (
-      <div className="select-none landscape:text-lg text:text-lg">
+      <div className="select-none landscape:text-lg landscape:text:text-lg">
         <div>
           {firstDate.getDate()}:{DAYS[firstDate.getDay()]}:
           {MONTHS[firstDate.getMonth() + 1]}

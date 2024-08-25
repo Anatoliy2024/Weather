@@ -174,7 +174,7 @@ export function WeatherBlock({
   const renderWeather = (state: WeatherData) => {
     if (state.time.every((item) => item instanceof Date)) {
       return (
-        <div className="select-none landscape:text-lg text:text-lg ">
+        <div className="select-none landscape:text-lg landscape:text:text-lg ">
           <div>
             {state.time[0].getDate()}:{DAYS[state.time[0].getDay()]}:
             {MONTHS[state.time[0].getMonth() + 1]}

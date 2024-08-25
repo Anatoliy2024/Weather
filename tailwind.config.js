@@ -11,9 +11,15 @@ export default {
       od: "900px",
       // => @media (min-width: 640px) { ... }
 
-      text: { max: "800px" },
+      "text-lg": { max: "800px" },
     },
     extend: {},
+  },
+  variants: {
+    extend: {
+      // Расширяем возможность для кастомных медиазапросов и комбинаций условий
+      fontSize: ["landscape", "text-lg", "landscape:text-lg"],
+    },
   },
   plugins: [],
 }
