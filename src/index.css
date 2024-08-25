@@ -28,7 +28,7 @@ html {
   @apply h-3; */
 }
 .swiper-pagination {
-  bottom: 20px !important; /* Расстояние от нижнего края */
+  bottom: -4px !important; /* Расстояние от нижнего края */
 
   position: absolute; /* Устанавливаем позицию как абсолютную */
 }

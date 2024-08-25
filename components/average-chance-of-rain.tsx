@@ -336,7 +336,7 @@ export const AverageChanceOfRain = ({
           {MONTHS[firstDate.getMonth() + 1]}
         </div>
         <Swiper
-          style={{ maxWidth: "100vw" }}
+          style={{ maxWidth: "100vw", paddingBottom: "10px" }}
           spaceBetween={0}
           slidesPerView={5}
           breakpoints={{
@@ -475,7 +475,7 @@ export const AverageChanceOfRain = ({
         {statusShow === "3day" && (
           <div className="flex w-screen  od:w-[850px] ">
             <Swiper
-              style={{ width: "100%" }}
+              style={{ width: "100%", paddingBottom: "10px" }}
               spaceBetween={10}
               slidesPerView={1}
               breakpoints={{
@@ -513,7 +513,7 @@ export const AverageChanceOfRain = ({
         {statusShow === "week" && allAvarage.week.time.length > 0 && (
           <div className="w-full select-non">
             <Swiper
-              style={{ maxWidth: "100vw" }}
+              style={{ maxWidth: "100vw", paddingBottom: "10px" }}
               spaceBetween={0}
               slidesPerView={5}
               breakpoints={{

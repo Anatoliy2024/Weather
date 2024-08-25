@@ -93,7 +93,10 @@ export function WeatherBlock({
               const today = new Date()
 
               return (
-                <SwiperSlide key={index} style={{ width: "65px" }}>
+                <SwiperSlide
+                  key={index}
+                  style={{ width: "65px", paddingBottom: "10px" }}
+                >
                   <li
                     className={clsx(
                       "flex flex-col w-[65px] justify-center items-center  rounded-md ",
@@ -276,7 +279,7 @@ export function WeatherBlock({
         {weatherData !== null && statusShow === "3day" && (
           <div className="flex w-screen od:w-[850px]">
             <Swiper
-              style={{ width: "100%" }}
+              style={{ width: "100%", paddingBottom: "10px" }}
               spaceBetween={10}
               slidesPerView={1}
               breakpoints={{
@@ -313,7 +316,7 @@ export function WeatherBlock({
         {weatherData !== null && statusShow === "week" && (
           <div className="w-full select-none">
             <Swiper
-              style={{ maxWidth: "100vw" }}
+              style={{ maxWidth: "100vw", paddingBottom: "10px" }}
               spaceBetween={0}
               slidesPerView={5}
               breakpoints={{
