@@ -119,8 +119,10 @@ export const AverageChanceOfRain = ({
 
   // Этот useEffect всегда будет вызываться, когда activeIndex изменяется
   useEffect(() => {
-    if (swiperRef.current) {
-      swiperRef.current.swiper.slideTo(activeIndex)
+    if (сrossingDate || meteoState || stateWeatherApi || stateDaily) {
+      if (swiperRef.current) {
+        swiperRef.current.swiper.slideTo(activeIndex)
+      }
     }
   }, [activeIndex])
 
@@ -321,7 +323,7 @@ export const AverageChanceOfRain = ({
       arrayDays.time.length === 0 ||
       arrayDays.time.every((item) => item === null || !(item instanceof Date))
     ) {
-      return null
+      return <div className="text-center">Нет данных</div>
     }
 
     // Проверяем, что все значения в массиве time - это даты
@@ -406,7 +408,9 @@ export const AverageChanceOfRain = ({
       arrayDays.time.length === 0 ||
       arrayDays.time.every((item) => item === null || !(item instanceof Date))
     ) {
-      return <div>No data available</div>
+      return (
+        <div className="w-screen  od:w-[850px] text-center">Нет данных</div>
+      )
     }
 
     // Проверяем, что все значения в массиве time - это даты
@@ -414,7 +418,7 @@ export const AverageChanceOfRain = ({
       arrayDays.time[0] instanceof Date ? arrayDays.time[0] : new Date()
 
     return (
-      <div className="select-none">
+      <div className="select-none landscape:text-xl text:text-xl">
         <div>
           {firstDate.getDate()}:{DAYS[firstDate.getDay()]}:
           {MONTHS[firstDate.getMonth() + 1]}
@@ -503,7 +507,7 @@ export const AverageChanceOfRain = ({
           </div>
         )}
 
-        {statusShow === "week" && (
+        {statusShow === "week" && allAvarage.week.time.length > 0 && (
           <div className="w-full select-non">
             <Swiper
               style={{ maxWidth: "100vw" }}
@@ -561,6 +565,9 @@ export const AverageChanceOfRain = ({
               })}
             </Swiper>
           </div>
+        )}
+        {statusShow === "week" && allAvarage.week.time.length === 0 && (
+          <div className="text-center">Нет данных</div>
         )}
       </div>
     </div>

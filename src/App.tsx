@@ -184,10 +184,10 @@ function App() {
     <div className="min-h-screen  flex items-center justify-center bg-violet-950/80">
       <div className="flex flex-col items-center gap-2 py-8  text-pink-400 w-full">
         <div className="flex justify-center  pb-6">Погода В городе</div>
-        <div className=" flex gap-3 flex-col">
-          <div className="flex gap-3">
+        <div className=" flex gap-3 flex-col w-[330px]">
+          <div className="flex gap-3 justify-between">
             <input
-              className="pl-2 rounded-md w-52"
+              className="pl-2 rounded-md min-w-52"
               type="text"
               value={cityValue}
               onChange={(e) => setCityValue(e.target.value)}
@@ -252,37 +252,52 @@ function App() {
           activeIndex={activeIndex}
           onSlideChange={handleSlideChange}
         />
-        <WeatherBlock
+        {rainProbably.openMeteo.today.time.length > 0 && (
+          <WeatherBlock
+            weatherData={rainProbably.openMeteo}
+            statusShow={statusShow}
+            name="open-meteo"
+            activeIndex={activeIndex}
+            onSlideChange={handleSlideChange}
+          />
+        )}
+        {/* <WeatherBlock
           weatherData={rainProbably.openMeteo}
           statusShow={statusShow}
           name="open-meteo"
           activeIndex={activeIndex}
           onSlideChange={handleSlideChange}
-        />
+        /> */}
 
-        <WeatherBlock
-          weatherData={rainProbably.stateWeatherApi}
-          statusShow={statusShow}
-          name="WeatherAPI"
-          activeIndex={activeIndex}
-          onSlideChange={handleSlideChange}
-        />
+        {rainProbably.stateWeatherApi.today.time.length > 0 && (
+          <WeatherBlock
+            weatherData={rainProbably.stateWeatherApi}
+            statusShow={statusShow}
+            name="WeatherAPI"
+            activeIndex={activeIndex}
+            onSlideChange={handleSlideChange}
+          />
+        )}
 
-        <WeatherBlock
-          weatherData={rainProbably.meteoState}
-          statusShow={statusShow}
-          name="MeteoStats"
-          activeIndex={activeIndex}
-          onSlideChange={handleSlideChange}
-        />
+        {rainProbably.meteoState.today.time.length > 0 && (
+          <WeatherBlock
+            weatherData={rainProbably.meteoState}
+            statusShow={statusShow}
+            name="MeteoStats"
+            activeIndex={activeIndex}
+            onSlideChange={handleSlideChange}
+          />
+        )}
 
-        <WeatherBlock
-          weatherData={rainProbably.crossingDate}
-          statusShow={statusShow}
-          name="CrossingWeather"
-          activeIndex={activeIndex}
-          onSlideChange={handleSlideChange}
-        />
+        {rainProbably.crossingDate.today.time.length > 0 && (
+          <WeatherBlock
+            weatherData={rainProbably.crossingDate}
+            statusShow={statusShow}
+            name="CrossingWeather"
+            activeIndex={activeIndex}
+            onSlideChange={handleSlideChange}
+          />
+        )}
       </div>
     </div>
   )
