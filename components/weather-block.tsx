@@ -267,7 +267,11 @@ export function WeatherBlock({
   }
 
   return (
-    <div className=" ">
+    <div
+      className={`${
+        statusShow === "week" && name === "MeteoStats" ? "hidden" : ""
+      }`}
+    >
       <h2 className="text-center">{name}</h2>
       <div className=" flex flex-col gap-4  rounded-md bg-violet-50 text-pink-800">
         {weatherData !== null &&
@@ -277,7 +281,7 @@ export function WeatherBlock({
           statusShow === "tomorrow" &&
           weatherFromDay(weatherData.tomorrow)}
         {weatherData !== null && statusShow === "3day" && (
-          <div className="flex w-screen od:w-[850px]">
+          <div className="flex w-screen od:w-[850px] ">
             <Swiper
               style={{ width: "100%", paddingBottom: "10px" }}
               spaceBetween={10}
