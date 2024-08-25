@@ -184,7 +184,7 @@ function App() {
     <div className="min-h-screen  flex items-center justify-center bg-violet-950/80">
       <div className="flex flex-col items-center gap-2 py-8  text-pink-400 w-full">
         <div className="flex justify-center  pb-6">Погода В городе</div>
-        <div className=" flex gap-3 flex-col w-[330px]">
+        <div className=" flex gap-3 flex-col w-[340px]">
           <div className="flex gap-3 justify-between">
             <input
               className="pl-2 rounded-md min-w-52"
@@ -202,7 +202,7 @@ function App() {
               {loading ? "Загрузка..." : "Кликни"}
             </button>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 justify-between">
             <UiButton
               className={clsx(borderButton("day"))}
               onClick={() => {
