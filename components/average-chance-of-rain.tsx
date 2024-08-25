@@ -434,7 +434,7 @@ export const AverageChanceOfRain = ({
                 <li
                   key={index}
                   className={clsx(
-                    "flex flex-col w-[70px] rounded items-center",
+                    "flex flex-col min-w-[60px] rounded items-center",
                     (today.getHours() === hours.getHours() ||
                       today.getHours() - 1 === hours.getHours() ||
                       today.getHours() - 2 === hours.getHours() ||
@@ -494,13 +494,13 @@ export const AverageChanceOfRain = ({
               onSlideChange={(swiper) => onSlideChange(swiper.activeIndex)}
               onSwiper={(swiper) => console.log(swiper)}
             >
-              <SwiperSlide style={{ minWidth: "240px" }}>
+              <SwiperSlide style={{ minWidth: "200px" }}>
                 {weatherFromThreeDay(allAvarage["3day"].today)}
               </SwiperSlide>
-              <SwiperSlide style={{ minWidth: "240px" }}>
+              <SwiperSlide style={{ minWidth: "200px" }}>
                 {weatherFromThreeDay(allAvarage["3day"].tomorrow)}
               </SwiperSlide>
-              <SwiperSlide style={{ minWidth: "240px" }}>
+              <SwiperSlide style={{ minWidth: "200px" }}>
                 {weatherFromThreeDay(allAvarage["3day"].nextTomorrow)}
               </SwiperSlide>
             </Swiper>
