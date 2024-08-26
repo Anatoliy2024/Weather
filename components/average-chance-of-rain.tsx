@@ -468,7 +468,7 @@ export const AverageChanceOfRain = ({
 
   return (
     <div className="">
-      <h2 className="text-center">Среднее занчение осадков</h2>
+      <h2 className="text-center">Среднее значение осадков</h2>
       <div className="  flex flex-col gap-4  rounded-md bg-violet-50 text-pink-800">
         {statusShow === "day" && weatherFromDay(allAvarage.today)}
         {statusShow === "tomorrow" && weatherFromDay(allAvarage.tomorrow)}
