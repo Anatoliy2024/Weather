@@ -82,15 +82,20 @@ function App() {
     })
     if (stateHoyrly !== null && stateDaily !== null) {
       getOpenMeteo(stateHoyrly, stateDaily, times, setRainProbably)
+      // console.log("stateDaily", stateDaily)
     }
+
     if (stateWeatherApi !== null) {
       getWeatherApi(stateWeatherApi, setRainProbably)
+      // console.log("stateWeatherApi", stateWeatherApi)
     }
     if (meteoState !== null) {
       getMeteoState(meteoState, setRainProbably)
+      // console.log("meteoState", meteoState)
     }
     if (сrossingDate !== null) {
       getCrossingDate(сrossingDate, setRainProbably)
+      // console.log("сrossingDate", сrossingDate)
     }
   }, [stateHoyrly, stateDaily, stateWeatherApi, meteoState, сrossingDate]) // Зависимости useEffect
 

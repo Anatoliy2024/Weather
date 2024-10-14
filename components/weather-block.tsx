@@ -1,5 +1,5 @@
 import { DAYS, MONTHS } from "../constants/montsAndDayWeek"
-import { Swiper, SwiperSlide } from "swiper/react"
+import { Swiper, SwiperSlide, SwiperRef } from "swiper/react"
 import { Pagination } from "swiper/modules"
 
 import clsx from "clsx"
@@ -49,7 +49,7 @@ export function WeatherBlock({
 }) {
   // if (weatherData.today.time.length === 0) return null
 
-  const swiperRef = useRef(null)
+  const swiperRef = useRef<SwiperRef>(null)
   // const swiperRef = useRef<SwiperType | null>(null)
   // Этот useEffect всегда будет вызываться, когда activeIndex изменяется
   useEffect(() => {
@@ -349,6 +349,20 @@ export function WeatherBlock({
                       ? "text-sky-400"
                       : ""
 
+                  // console.log(
+                  //   " weatherData.week.tempMax.toString()",
+                  //   weatherData.week.tempMax[index].toString()[0]
+                  // )
+                  // console.log(
+                  //   "  weatherData.week.tempMin.toString()",
+                  //   weatherData.week.tempMin[index].toString()[0]
+                  // )
+                  // if (
+                  //   !weatherData.week.tempMax[index] ||
+                  //   !weatherData.week.tempMin[index]
+                  // ) {
+                  //   return <div> full</div>
+                  // }
                   return (
                     <SwiperSlide key={index} style={{ minWidth: "70px" }}>
                       <li
@@ -399,7 +413,9 @@ export function WeatherBlock({
                           </div>
                         )}
                         <span className="rounded bg-green-200">
-                          {weatherData.week.tempMax.toString()[0] === "-"
+                          {(
+                            weatherData.week.tempMax[index] as number
+                          ).toString()[0] === "-"
                             ? ""
                             : "+"}
                           {Math.round(
@@ -408,7 +424,9 @@ export function WeatherBlock({
                           °
                         </span>
                         <span className="rounded bg-blue-200">
-                          {weatherData.week.tempMin.toString()[0] === "-"
+                          {(
+                            weatherData.week.tempMin[index] as number
+                          ).toString()[0] === "-"
                             ? ""
                             : "+"}
                           {Math.round(
@@ -434,6 +452,8 @@ export function WeatherBlock({
                       </li>
                     </SwiperSlide>
                   )
+                } else {
+                  return <div key={index}></div>
                 }
               })}
             </Swiper>
